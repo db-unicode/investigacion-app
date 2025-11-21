@@ -709,7 +709,215 @@ registerForecastRoute(app, {
 
 ---
 
-## 10. Related Documents
+## 10. Next Phase: Forecast Accuracy & Backtesting
+
+The next implementation phase will add the capability to compare forecast predictions against actual enrollment data, enabling accuracy measurement and model validation.
+
+### 10.1 Feature Overview
+
+```mermaid
+flowchart LR
+    subgraph "Backtesting Flow"
+        A[Forecast for Term X] --> B[Actual Enrollments for Term X]
+        B --> C[Compare & Calculate]
+        C --> D[Accuracy Metrics]
+    end
+
+    subgraph "Metrics"
+        D --> E[Accuracy %]
+        D --> F[Absolute Error]
+        D --> G[Direction: Over/Under]
+    end
+```
+
+### 10.2 Accuracy Metrics
+
+| Metric | Formula | Description |
+|--------|---------|-------------|
+| **Accuracy Percentage** | `100 - (|forecast - actual| / actual * 100)` | How close the prediction was to reality |
+| **Absolute Error** | `forecast - actual` | Raw difference (positive = over, negative = under) |
+| **Error Direction** | `sign(forecast - actual)` | Whether we predicted too many or too few students |
+| **MAPE** | `mean(|forecast - actual| / actual) * 100` | Mean Absolute Percentage Error across terms |
+
+### 10.3 Proposed API Contract
+
+#### Endpoint
+
+```
+GET /api/courses/{courseCode}/forecasts/{methodId}/accuracy?term={term}
+GET /api/courses/{courseCode}/forecasts/{methodId}/accuracy?terms={terms}
+```
+
+#### Response Structure
+
+```typescript
+interface ForecastAccuracyResultDto {
+  courseCode: string;
+  method: {
+    id: string;
+    label: string;
+  };
+  comparisons: Array<{
+    academicTerm: number;
+    forecast: {
+      predictedEnrollment: number;
+      generatedAt?: string;
+    };
+    actual: {
+      realEnrollment: number;
+      dataSource: string;
+    };
+    metrics: {
+      accuracyPercentage: number;    // 0-100
+      absoluteError: number;          // positive = over, negative = under
+      errorDirection: 'over' | 'under' | 'exact';
+      studentsOff: number;            // |forecast - actual|
+    };
+  }>;
+  summary: {
+    averageAccuracy: number;
+    totalPredicted: number;
+    totalActual: number;
+    overallError: number;
+    mape: number;                     // Mean Absolute Percentage Error
+  };
+  metadata: {
+    requestedTerms: number[];
+    processedAt: string;
+  };
+}
+```
+
+### 10.4 Example Response
+
+```json
+{
+  "courseCode": "ISIS-3204",
+  "method": {
+    "id": "potential-students-by-prerequisites",
+    "label": "Potential students by prerequisites (set-based)"
+  },
+  "comparisons": [
+    {
+      "academicTerm": 202410,
+      "forecast": {
+        "predictedEnrollment": 42,
+        "generatedAt": "2024-01-15T10:00:00.000Z"
+      },
+      "actual": {
+        "realEnrollment": 38,
+        "dataSource": "enrollments"
+      },
+      "metrics": {
+        "accuracyPercentage": 89.47,
+        "absoluteError": 4,
+        "errorDirection": "over",
+        "studentsOff": 4
+      }
+    },
+    {
+      "academicTerm": 202420,
+      "forecast": {
+        "predictedEnrollment": 35,
+        "generatedAt": "2024-01-15T10:00:00.000Z"
+      },
+      "actual": {
+        "realEnrollment": 40,
+        "dataSource": "enrollments"
+      },
+      "metrics": {
+        "accuracyPercentage": 87.50,
+        "absoluteError": -5,
+        "errorDirection": "under",
+        "studentsOff": 5
+      }
+    }
+  ],
+  "summary": {
+    "averageAccuracy": 88.49,
+    "totalPredicted": 77,
+    "totalActual": 78,
+    "overallError": -1,
+    "mape": 11.51
+  },
+  "metadata": {
+    "requestedTerms": [202410, 202420],
+    "processedAt": "2025-11-21T15:30:00.000Z"
+  }
+}
+```
+
+### 10.5 Architecture Components
+
+```mermaid
+classDiagram
+    class ForecastAccuracyCalculator {
+        <<interface>>
+        +calculate(forecast, actual) AccuracyMetrics
+    }
+
+    class BacktestingService {
+        -accuracyCalculator: ForecastAccuracyCalculator
+        -enrollmentRepository: EnrollmentRepository
+        +compareForTerm(courseCode, term, forecast) Comparison
+        +compareForTerms(courseCode, terms, forecasts) Comparison[]
+    }
+
+    class ForecastAccuracyUseCase {
+        -forecaster: CourseDemandForecaster
+        -backtestingService: BacktestingService
+        +execute(input) ForecastAccuracyResultDto
+    }
+
+    ForecastAccuracyCalculator <|.. DefaultAccuracyCalculator
+    BacktestingService o-- ForecastAccuracyCalculator
+    ForecastAccuracyUseCase o-- BacktestingService
+```
+
+### 10.6 Data Requirements
+
+To calculate accuracy, the system needs:
+
+1. **Forecast Data**: The predicted enrollment for the term
+2. **Actual Enrollment**: Real enrollment count from `enrollments` table
+
+```sql
+-- Get actual enrollment for a course/term
+SELECT COUNT(DISTINCT student_id) as actual_enrollment
+FROM enrollments
+WHERE course_code = 'ISIS-3204'
+  AND academic_term = 202410;
+```
+
+### 10.7 Implementation Considerations
+
+1. **Historical Forecasts**: Option to store forecasts for later comparison
+2. **Real-time Calculation**: Generate forecast and compare immediately
+3. **Caching**: Cache accuracy results for past terms (data won't change)
+4. **Visualization**: Support data format for charts (accuracy over time)
+
+### 10.8 Integration with Multi-Term
+
+The backtesting feature will leverage the multi-term abstraction:
+
+```typescript
+// Calculate accuracy for multiple terms
+const { results } = await multiTermForecaster.forecastMultiple(
+  { courseCode: 'ISIS-3204' },
+  [202410, 202420, 202510]
+);
+
+// Compare each forecast with actual data
+const comparisons = await backtestingService.compareForTerms(
+  courseCode,
+  terms,
+  results
+);
+```
+
+---
+
+## 11. Related Documents
 
 - [General Architecture](../../general-architecture.md)
 - [Potential Students by Prerequisites](../potential-students-by-prerequsites/doc.md)
