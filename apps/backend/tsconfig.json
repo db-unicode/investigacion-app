@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+
+    // Muy importante para que reconozca `process`, `__dirname`, etc.
+    "types": ["node"]
+  },
+  "include": ["src"]
+}

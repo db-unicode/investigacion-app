@@ -1,0 +1,9 @@
+{
+  "name": "enrollments-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend",
+    "packages/contracts"
+  ]
+}
