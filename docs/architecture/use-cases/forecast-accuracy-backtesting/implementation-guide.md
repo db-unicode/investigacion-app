@@ -30,6 +30,26 @@ flowchart TD
 
 ---
 
+## Step 0: Prerequisites Check
+
+Before starting implementation, verify the following components exist and are working:
+
+```bash
+# Verify multi-term forecast abstraction is implemented
+ls apps/backend/src/domain/forecasts/multi-term-forecaster.decorator.ts
+ls apps/backend/src/presentation/factories/forecast-route.factory.ts
+
+# Verify course history service exists
+ls apps/backend/src/domain/services/course-history-service.ts
+
+# Verify enrollment repository exists
+ls apps/backend/src/infrastructure/repositories/enrollment-repository.ts
+```
+
+These components are already implemented and will be reused for backtesting.
+
+---
+
 ## Step 1: Create DTO Schemas
 
 ### 1.1 Create the Accuracy DTO File
@@ -139,15 +159,33 @@ export type ForecastAccuracyInputDto = z.infer<
 >;
 ```
 
-### 1.2 Export from Index
+### 1.2 Update Main Package Exports
 
-**Location**: `packages/contracts/src/forecasts/index.ts`
+**Location**: `packages/contracts/src/index.ts`
+
+Add the following exports to the existing file:
 
 ```typescript
-export * from './course-demand-forecast.dto';
-export * from './multi-term-forecast.dto';
-export * from './forecast-accuracy.dto';
+// Add to existing exports in index.ts
+
+export {
+  accuracyMetricsSchema,
+  comparisonItemSchema,
+  summaryMetricsSchema,
+  forecastAccuracyResultSchema,
+  forecastAccuracyInputSchema,
+} from './forecasts/forecast-accuracy.dto.js';
+
+export type {
+  AccuracyMetricsDto,
+  ComparisonItemDto,
+  SummaryMetricsDto,
+  ForecastAccuracyResultDto,
+  ForecastAccuracyInputDto,
+} from './forecasts/forecast-accuracy.dto.js';
 ```
+
+> **Note**: The contracts package uses `.js` extensions in imports for ESM compatibility.
 
 ---
 
@@ -378,6 +416,8 @@ export interface ActualEnrollmentProvider {
 
 **Location**: `apps/backend/src/infrastructure/providers/course-history-actual-provider.ts`
 
+> **Important**: This file uses the existing `EnrollmentRepository` and `CourseHistoryService`. The `EnrollmentRecord.courseOutcome` field is a string that needs to be cast to `'P' | 'F' | 'W'` for the `CourseHistoryService`.
+
 ```typescript
 import type { ActualEnrollmentProvider } from '../../domain/backtesting/actual-enrollment-provider';
 import type { EnrollmentRepository } from '../repositories/enrollment-repository';
@@ -390,7 +430,11 @@ export interface CourseHistoryActualProviderDeps {
 
 /**
  * Implementation of ActualEnrollmentProvider using existing
- * EnrollmentRepository and CourseHistoryService
+ * EnrollmentRepository and CourseHistoryService.
+ *
+ * This provider bridges the infrastructure layer (EnrollmentRepository)
+ * with the domain layer (CourseHistoryService) to get actual enrollment
+ * counts for backtesting comparisons.
  */
 export class CourseHistoryActualProvider implements ActualEnrollmentProvider {
   private readonly enrollmentRepository: EnrollmentRepository;
@@ -411,6 +455,8 @@ export class CourseHistoryActualProvider implements ActualEnrollmentProvider {
       return null;
     }
 
+    // Convert EnrollmentRecord[] to EnrollmentForHistory[]
+    // The courseOutcome field is stored as string but typed as 'P' | 'F' | 'W'
     const historyPoints = this.courseHistoryService.aggregateByTerm(
       enrollments.map(e => ({
         academicTerm: e.academicTerm,
@@ -433,13 +479,14 @@ export class CourseHistoryActualProvider implements ActualEnrollmentProvider {
     const result = new Map<number, number | null>();
 
     if (enrollments.length === 0) {
-      // Return null for all terms
+      // Return null for all terms when no enrollment data exists
       for (const term of terms) {
         result.set(term, null);
       }
       return result;
     }
 
+    // Convert EnrollmentRecord[] to EnrollmentForHistory[]
     const historyPoints = this.courseHistoryService.aggregateByTerm(
       enrollments.map(e => ({
         academicTerm: e.academicTerm,
@@ -453,7 +500,7 @@ export class CourseHistoryActualProvider implements ActualEnrollmentProvider {
       historyPoints.map(p => [p.academicTerm, p.totalEnrollments]),
     );
 
-    // Get enrollment for each requested term
+    // Get enrollment for each requested term (null if no data)
     for (const term of terms) {
       const enrollment = pointsByTerm.get(term) ?? null;
       result.set(term, enrollment);
@@ -462,6 +509,15 @@ export class CourseHistoryActualProvider implements ActualEnrollmentProvider {
     return result;
   }
 }
+```
+
+### 3.3 Create Index File for Providers
+
+**Location**: `apps/backend/src/infrastructure/providers/index.ts`
+
+```typescript
+export { CourseHistoryActualProvider } from './course-history-actual-provider';
+export type { CourseHistoryActualProviderDeps } from './course-history-actual-provider';
 ```
 
 ---
@@ -715,6 +771,8 @@ export class ForecastAccuracyUseCase {
 
 **Location**: `apps/backend/src/presentation/controllers/forecasts/forecast-accuracy.controller.ts`
 
+> **Important**: This controller follows the same pattern as `potential-students-by-prerequisites.controller.ts`. Note that `enrollmentRepository` is not exported as a singleton - we need to use the factory with the database client, or add a singleton export similar to `enrollmentForecastRepository`.
+
 ```typescript
 import { z } from 'zod';
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
@@ -724,10 +782,12 @@ import { PotentialStudentsByPrerequisitesForecaster } from '../../../domain/fore
 import { BacktestingService } from '../../../domain/backtesting/backtesting-service';
 import { DefaultAccuracyCalculator } from '../../../domain/backtesting/default-accuracy-calculator';
 import { CourseHistoryActualProvider } from '../../../infrastructure/providers/course-history-actual-provider';
-import { enrollmentRepository } from '../../../infrastructure/repositories/enrollment-repository';
+// Note: enrollmentRepository needs to be exported as singleton or created with dbClient
+import { createEnrollmentRepository } from '../../../infrastructure/repositories/enrollment-repository';
 import { enrollmentForecastRepository } from '../../../infrastructure/repositories/enrollment-forecast-repository';
 import { prerequisitesRepository } from '../../../infrastructure/repositories/prerequisites-repository';
 import { createCourseHistoryService } from '../../../domain/services/course-history-service';
+import { dbClient } from '../../../infrastructure/db/client';
 
 const COURSE_CODE_PATTERN = /^[A-Z]{4}-\d{4}$/;
 
@@ -779,7 +839,9 @@ const forecastAccuracyRoute = createRoute({
 });
 
 export const registerForecastAccuracyRoute = (app: OpenAPIHono): void => {
-  // Initialize dependencies
+  // Initialize dependencies using factory pattern
+  // Create enrollment repository instance (or export singleton from repository file)
+  const enrollmentRepository = createEnrollmentRepository(dbClient);
   const courseHistoryService = createCourseHistoryService();
 
   const actualProvider = new CourseHistoryActualProvider({
@@ -795,6 +857,7 @@ export const registerForecastAccuracyRoute = (app: OpenAPIHono): void => {
   });
 
   // For now, only support potential-students-by-prerequisites method
+  // Uses the same forecaster as the forecast endpoint
   const forecaster = new PotentialStudentsByPrerequisitesForecaster({
     prerequisitesProvider: prerequisitesRepository,
     enrollmentHistoryProvider: enrollmentForecastRepository,
@@ -874,8 +937,9 @@ curl "http://localhost:3000/api/courses/ISIS-3204/forecasts/potential-students-b
 | `apps/backend/src/domain/backtesting/actual-enrollment-provider.ts` | Provider interface | Domain |
 | `apps/backend/src/domain/backtesting/comparison-result.ts` | Result types | Domain |
 | `apps/backend/src/domain/backtesting/backtesting-service.ts` | Main service | Domain |
-| `apps/backend/src/domain/backtesting/index.ts` | Exports | Domain |
+| `apps/backend/src/domain/backtesting/index.ts` | Domain exports | Domain |
 | `apps/backend/src/infrastructure/providers/course-history-actual-provider.ts` | Provider implementation | Infrastructure |
+| `apps/backend/src/infrastructure/providers/index.ts` | Provider exports | Infrastructure |
 | `apps/backend/src/application/use-cases/forecasts/forecast-accuracy.use-case.ts` | Use case | Application |
 | `apps/backend/src/presentation/controllers/forecasts/forecast-accuracy.controller.ts` | Controller | Presentation |
 
@@ -883,8 +947,17 @@ curl "http://localhost:3000/api/courses/ISIS-3204/forecasts/potential-students-b
 
 | File | Changes |
 |------|---------|
-| `packages/contracts/src/forecasts/index.ts` | Export accuracy DTOs |
-| Main app file | Register accuracy route |
+| `packages/contracts/src/index.ts` | Export accuracy DTOs (use `.js` extension) |
+| `apps/backend/src/presentation/server.ts` | Register accuracy route |
+
+### Existing Files Reused (No Changes Required)
+
+| File | Purpose |
+|------|---------|
+| `apps/backend/src/domain/services/course-history-service.ts` | Aggregates enrollments by term |
+| `apps/backend/src/infrastructure/repositories/enrollment-repository.ts` | Queries enrollment data |
+| `apps/backend/src/domain/forecasts/multi-term-forecaster.decorator.ts` | Multi-term execution |
+| `apps/backend/src/infrastructure/db/client.ts` | Database client |
 
 ---
 
@@ -893,40 +966,45 @@ curl "http://localhost:3000/api/courses/ISIS-3204/forecasts/potential-students-b
 ### Pre-Implementation
 
 - [ ] Review architecture document
-- [ ] Understand existing course-history components
+- [ ] Verify multi-term forecast abstraction is implemented (Step 0)
+- [ ] Understand existing course-history-service.ts and enrollment-repository.ts
 - [ ] Set up development environment
 
 ### Implementation
 
 - [ ] Step 1: Create DTOs
-  - [ ] Create forecast-accuracy.dto.ts
-  - [ ] Export from index
+  - [ ] Create `packages/contracts/src/forecasts/forecast-accuracy.dto.ts`
+  - [ ] Update `packages/contracts/src/index.ts` with exports
 
-- [ ] Step 2: Create Accuracy Calculator
-  - [ ] Create accuracy-metrics.ts
-  - [ ] Create accuracy-calculator.ts interface
-  - [ ] Create default-accuracy-calculator.ts
-  - [ ] Create comparison-result.ts
+- [ ] Step 2: Create Accuracy Calculator (Domain Layer)
+  - [ ] Create `accuracy-metrics.ts`
+  - [ ] Create `accuracy-calculator.ts` interface
+  - [ ] Create `default-accuracy-calculator.ts`
+  - [ ] Create `comparison-result.ts`
 
 - [ ] Step 3: Create Actual Enrollment Provider
-  - [ ] Create provider interface
-  - [ ] Create CourseHistoryActualProvider
+  - [ ] Create `apps/backend/src/domain/backtesting/actual-enrollment-provider.ts` (interface)
+  - [ ] Create `apps/backend/src/infrastructure/providers/` directory
+  - [ ] Create `course-history-actual-provider.ts` (implementation)
+  - [ ] Create `index.ts` for providers exports
 
 - [ ] Step 4: Create Backtesting Service
-  - [ ] Create backtesting-service.ts
-  - [ ] Create index.ts exports
+  - [ ] Create `backtesting-service.ts`
+  - [ ] Create `apps/backend/src/domain/backtesting/index.ts` exports
 
 - [ ] Step 5: Create Use Case
-  - [ ] Create forecast-accuracy.use-case.ts
+  - [ ] Create `forecast-accuracy.use-case.ts`
 
 - [ ] Step 6: Create Controller
-  - [ ] Create controller
-  - [ ] Register route
+  - [ ] Create `forecast-accuracy.controller.ts`
+  - [ ] Register route in `server.ts`
 
 - [ ] Step 7: Testing
-  - [ ] Write unit tests
+  - [ ] Write unit tests for DefaultAccuracyCalculator
+  - [ ] Write unit tests for BacktestingService
+  - [ ] Write unit tests for CourseHistoryActualProvider
   - [ ] Write integration tests
-  - [ ] Manual testing
+  - [ ] Manual API testing with curl
 
 ---
 

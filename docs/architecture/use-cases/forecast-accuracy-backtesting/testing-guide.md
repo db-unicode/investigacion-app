@@ -399,6 +399,8 @@ describe('BacktestingService', () => {
 
 **Location**: `apps/backend/src/infrastructure/providers/__tests__/course-history-actual-provider.test.ts`
 
+> **Note**: The provider converts `EnrollmentRecord.courseOutcome` (string) to `'P' | 'F' | 'W'` type for the CourseHistoryService. Tests should verify this conversion works correctly.
+
 ```typescript
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CourseHistoryActualProvider } from '../course-history-actual-provider';

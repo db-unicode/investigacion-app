@@ -705,25 +705,33 @@ accuracy.comparisons.forEach(c => {
 
 ### 9.1 Reusing EnrollmentRepository
 
-The `ActualEnrollmentProvider` wraps the existing `EnrollmentRepository`:
+The `ActualEnrollmentProvider` wraps the existing `EnrollmentRepository`. Note that `EnrollmentRecord` has `courseOutcome` as a string that needs to be cast to `CourseOutcome` type for the service:
 
 ```typescript
-// Uses existing findByCourse method
+// Uses existing findByCourse method from createEnrollmentRepository factory
 const enrollments = await this.enrollmentRepository.findByCourse(courseCode);
 
-// Filter by term
-const termEnrollments = enrollments.filter(
-  e => e.academicTerm === term
-);
+// Convert EnrollmentRecord to EnrollmentForHistory
+// EnrollmentRecord.courseOutcome is string, needs cast to 'P' | 'F' | 'W'
+const forHistory = enrollments.map(e => ({
+  academicTerm: e.academicTerm,
+  courseCode: e.courseCode,
+  courseOutcome: e.courseOutcome as 'P' | 'F' | 'W',
+}));
 ```
 
 ### 9.2 Reusing CourseHistoryService
 
-The provider uses `CourseHistoryService.aggregateByTerm()` to get enrollment counts:
+The provider uses `CourseHistoryService.aggregateByTerm()` (created via `createCourseHistoryService()` factory) to get enrollment counts:
 
 ```typescript
-// Aggregate enrollments by term
-const historyPoints = this.courseHistoryService.aggregateByTerm(enrollments);
+import { createCourseHistoryService } from '../../domain/services/course-history-service';
+
+// Create service instance
+const courseHistoryService = createCourseHistoryService();
+
+// Aggregate enrollments by term (expects EnrollmentForHistory[])
+const historyPoints = courseHistoryService.aggregateByTerm(forHistory);
 
 // Get total enrollments for specific term
 const termPoint = historyPoints.find(p => p.academicTerm === term);
@@ -738,18 +746,39 @@ For multi-term requests, fetch all data once:
 async getActualEnrollments(
   courseCode: string,
   terms: number[]
-): Promise<Map<number, number>> {
+): Promise<Map<number, number | null>> {
   // Single database query
   const allEnrollments = await this.enrollmentRepository.findByCourse(courseCode);
 
-  // Aggregate all terms at once
-  const historyPoints = this.courseHistoryService.aggregateByTerm(allEnrollments);
+  if (allEnrollments.length === 0) {
+    // Return null for all terms when no data exists
+    const result = new Map<number, number | null>();
+    for (const term of terms) {
+      result.set(term, null);
+    }
+    return result;
+  }
 
-  // Build result map
-  const result = new Map<number, number>();
+  // Convert to EnrollmentForHistory format
+  const forHistory = allEnrollments.map(e => ({
+    academicTerm: e.academicTerm,
+    courseCode: e.courseCode,
+    courseOutcome: e.courseOutcome as 'P' | 'F' | 'W',
+  }));
+
+  // Aggregate all terms at once
+  const historyPoints = this.courseHistoryService.aggregateByTerm(forHistory);
+
+  // Build lookup map for O(1) access
+  const pointsByTerm = new Map(
+    historyPoints.map(p => [p.academicTerm, p.totalEnrollments]),
+  );
+
+  // Build result map (null for terms without data)
+  const result = new Map<number, number | null>();
   for (const term of terms) {
-    const point = historyPoints.find(p => p.academicTerm === term);
-    result.set(term, point?.totalEnrollments ?? 0);
+    const enrollment = pointsByTerm.get(term) ?? null;
+    result.set(term, enrollment);
   }
 
   return result;

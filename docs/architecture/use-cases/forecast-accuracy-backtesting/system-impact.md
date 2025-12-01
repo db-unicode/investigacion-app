@@ -34,8 +34,8 @@ investigacion-app/
 ├── packages/
 │   └── contracts/
 │       └── src/
+│           ├── index.ts                              [MODIFIED - add accuracy exports]
 │           └── forecasts/
-│               ├── index.ts                          [MODIFIED]
 │               ├── forecast-accuracy.dto.ts          [NEW]
 │               └── __tests__/
 │                   └── forecast-accuracy.dto.test.ts [NEW]
@@ -56,14 +56,21 @@ investigacion-app/
 │           │   │       ├── default-accuracy-calculator.test.ts [NEW]
 │           │   │       └── backtesting-service.test.ts [NEW]
 │           │   │
+│           │   ├── forecasts/
+│           │   │   └── multi-term-forecaster.decorator.ts [REUSED]
+│           │   │
 │           │   └── services/
 │           │       └── course-history-service.ts     [REUSED]
 │           │
 │           ├── infrastructure/
+│           │   ├── db/
+│           │   │   └── client.ts                     [REUSED]
+│           │   │
 │           │   ├── repositories/
 │           │   │   └── enrollment-repository.ts      [REUSED]
 │           │   │
 │           │   └── providers/                        [NEW DIRECTORY]
+│           │       ├── index.ts                      [NEW]
 │           │       ├── course-history-actual-provider.ts [NEW]
 │           │       └── __tests__/
 │           │           └── course-history-actual-provider.test.ts [NEW]
@@ -76,6 +83,7 @@ investigacion-app/
 │           │               └── forecast-accuracy.use-case.integration.test.ts [NEW]
 │           │
 │           └── presentation/
+│               ├── server.ts                         [MODIFIED - register route]
 │               └── controllers/
 │                   └── forecasts/
 │                       └── forecast-accuracy.controller.ts [NEW]
@@ -84,10 +92,10 @@ investigacion-app/
     └── architecture/
         └── use-cases/
             └── forecast-accuracy-backtesting/
-                ├── architecture.md                   [NEW]
-                ├── implementation-guide.md           [NEW]
-                ├── testing-guide.md                  [NEW]
-                └── system-impact.md                  [NEW]
+                ├── architecture.md                   [EXISTS]
+                ├── implementation-guide.md           [EXISTS]
+                ├── testing-guide.md                  [EXISTS]
+                └── system-impact.md                  [EXISTS]
 ```
 
 ---
@@ -141,7 +149,8 @@ flowchart LR
 
 | File | Changes | Risk |
 |------|---------|------|
-| `forecasts/index.ts` | Add export for accuracy DTOs | Low |
+| `packages/contracts/src/index.ts` | Add exports for accuracy DTOs (use `.js` extension) | Low |
+| `apps/backend/src/presentation/server.ts` | Register accuracy route | Low |
 
 #### API Contract
 
@@ -456,11 +465,30 @@ logger.error('Accuracy calculation failed', { error });
 
 | Category | Count |
 |----------|-------|
-| New source files | 11 |
+| New source files | 12 |
 | New test files | 5 |
 | Modified files | 2 |
-| New documentation | 4 |
-| **Total new files** | **20** |
+| Documentation files | 4 (already exist) |
+| **Total new files** | **17** |
+
+### Breakdown
+
+**New Source Files (12):**
+- 1 DTO file (contracts)
+- 7 domain files (backtesting)
+- 2 infrastructure files (providers)
+- 1 application file (use case)
+- 1 presentation file (controller)
+
+**New Test Files (5):**
+- 1 DTO tests
+- 2 domain tests
+- 1 provider test
+- 1 integration test
+
+**Modified Files (2):**
+- `packages/contracts/src/index.ts`
+- `apps/backend/src/presentation/server.ts`
 
 ---
 
