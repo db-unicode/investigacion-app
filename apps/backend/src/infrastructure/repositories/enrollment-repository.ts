@@ -1,6 +1,6 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import { eq } from 'drizzle-orm';
-import type { DbClient } from '../db/client';
+import { createDbContext, type DbClient } from '../db/client';
 import { enrollments } from '../db/schema/enrollments';
 
 export type EnrollmentRecord = InferSelectModel<typeof enrollments>;
@@ -29,3 +29,10 @@ export const createEnrollmentRepository = (
 
   return { findByCourse };
 };
+
+/**
+ * Singleton instance for use across the application.
+ * Follows the same pattern as other repositories (enrollmentForecastRepository, prerequisitesRepository).
+ */
+const { dbClient } = createDbContext();
+export const enrollmentRepository = createEnrollmentRepository(dbClient);

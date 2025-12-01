@@ -18,6 +18,9 @@ import {
 import {
   registerPotentialStudentsForecastRoute,
 } from './controllers/forecasts/potential-students-by-prerequisites.controller';
+import {
+  registerForecastAccuracyRoute,
+} from './controllers/forecasts/forecast-accuracy.controller';
 
 const DEFAULT_PORT = 3000;
 const PORT_ENV_VAR = 'PORT';
@@ -60,6 +63,9 @@ const createHttpApp = (): OpenAPIHono => {
 
   // Forecast routes: potential students by prerequisites.
   registerPotentialStudentsForecastRoute(app);
+
+  // Forecast accuracy & backtesting routes.
+  registerForecastAccuracyRoute(app);
 
   return app;
 };

@@ -36,3 +36,18 @@ export type {
   MultiTermForecastInputDto,
 } from './forecasts/multi-term-forecast.dto.js';
 
+export {
+  accuracyMetricsSchema,
+  comparisonItemSchema,
+  summaryMetricsSchema,
+  forecastAccuracyResultSchema,
+  forecastAccuracyInputSchema,
+} from './forecasts/forecast-accuracy.dto.js';
+
+export type {
+  AccuracyMetricsDto,
+  ComparisonItemDto,
+  SummaryMetricsDto,
+  ForecastAccuracyResultDto,
+  ForecastAccuracyInputDto,
+} from './forecasts/forecast-accuracy.dto.js';
