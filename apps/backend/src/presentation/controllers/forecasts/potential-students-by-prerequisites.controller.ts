@@ -1,8 +1,5 @@
-import { z } from 'zod';
-import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
-import {
-  courseDemandForecastResultSchema,
-} from '@app/contracts';
+import type { OpenAPIHono } from '@hono/zod-openapi';
+import { courseDemandForecastResultSchema } from '@app/contracts';
 import {
   PotentialStudentsByPrerequisitesForecaster,
 } from '../../../domain/forecasts/potential-students-by-prerequisites-forecaster';
@@ -15,40 +12,7 @@ import {
 import {
   PotentialStudentsByPrerequisitesUseCase,
 } from '../../../application/use-cases/forecasts/potential-students-by-prerequisites.use-case.forecaster';
-
-const COURSE_CODE_PATTERN = /^[A-Z]{4}-\d{4}$/;
-
-const potentialStudentsRoute = createRoute({
-  method: 'get',
-  path: '/api/courses/{courseCode}/forecasts/potential-students',
-  request: {
-    params: z.object({
-      courseCode: z
-        .string()
-        .regex(COURSE_CODE_PATTERN, {
-          message: 'courseCode must match pattern XXXX-DDDD.',
-        }),
-    }),
-    query: z.object({
-      term: z
-        .coerce
-        .number()
-        .int()
-        .nonnegative(),
-    }),
-  },
-  responses: {
-    200: {
-      description:
-        'Potential enrollment based on prerequisite completion.',
-      content: {
-        'application/json': {
-          schema: courseDemandForecastResultSchema,
-        },
-      },
-    },
-  },
-});
+import { createForecastRoute } from '../../factories/forecast-route.factory';
 
 export const registerPotentialStudentsForecastRoute = (
   app: OpenAPIHono,
@@ -62,15 +26,22 @@ export const registerPotentialStudentsForecastRoute = (
     forecaster,
   });
 
-  app.openapi(potentialStudentsRoute, async (c) => {
-    const { courseCode } = c.req.valid('param');
-    const { term } = c.req.valid('query');
+  createForecastRoute(app, {
+    path: '/api/courses/{courseCode}/forecasts/potential-students',
+    summary: 'Forecast potential student enrollment',
+    description: 'Forecasts potential enrollment based on prerequisite completion for a given course and academic term(s).',
+    tags: ['Forecasts'],
+    resultSchema: courseDemandForecastResultSchema,
 
-    const result = await useCase.execute({
-      courseCode,
-      academicTerm: term,
-    });
+    singleTermHandler: async (courseCode, term) => {
+      return useCase.execute({
+        courseCode,
+        academicTerm: term,
+      });
+    },
 
-    return c.json(result, 200);
+    multiTermHandler: async (courseCode, terms) => {
+      return useCase.executeMultiple({ courseCode }, terms);
+    },
   });
 };

@@ -18,3 +18,21 @@ export type {
   CourseDemandForecastResultDto,
 } from './forecasts/course-demand-forecast.dto.js';
 
+export {
+  termForecastItemSchema,
+  forecastErrorSchema,
+  forecastMetadataSchema,
+  forecastMethodSchema,
+  multiTermForecastResultSchema,
+  multiTermForecastInputSchema,
+} from './forecasts/multi-term-forecast.dto.js';
+
+export type {
+  TermForecastItem,
+  ForecastError,
+  ForecastMetadata,
+  ForecastMethod,
+  MultiTermForecastResultDto,
+  MultiTermForecastInputDto,
+} from './forecasts/multi-term-forecast.dto.js';
+
