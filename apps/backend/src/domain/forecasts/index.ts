@@ -19,3 +19,21 @@ export {
   type EnrollmentHistoryProvider,
   type PrerequisitesProvider,
 } from './potential-students-by-prerequisites-forecaster';
+
+export type {
+  MethodCategory,
+  MethodStatus,
+  MethodCapabilities,
+  ForecastMethodMetadata,
+} from './forecast-method-metadata';
+
+export type {
+  ForecastMethodRegistry,
+  MethodFilterOptions,
+} from './forecast-method-registry';
+
+export { InMemoryForecastMethodRegistry } from './in-memory-forecast-method-registry';
+
+export { FORECAST_METHODS } from './method-definitions';
+
+export { forecastMethodRegistry } from './forecast-method-registry.singleton';

@@ -21,6 +21,9 @@ import {
 import {
   registerForecastAccuracyRoute,
 } from './controllers/forecasts/forecast-accuracy.controller';
+import {
+  registerForecastMethodsRoute,
+} from './controllers/forecasts/forecast-methods.controller';
 
 const DEFAULT_PORT = 3000;
 const PORT_ENV_VAR = 'PORT';
@@ -66,6 +69,9 @@ const createHttpApp = (): OpenAPIHono => {
 
   // Forecast accuracy & backtesting routes.
   registerForecastAccuracyRoute(app);
+
+  // Forecast methods routes.
+  registerForecastMethodsRoute(app);
 
   return app;
 };

@@ -51,3 +51,21 @@ export type {
   ForecastAccuracyResultDto,
   ForecastAccuracyInputDto,
 } from './forecasts/forecast-accuracy.dto.js';
+
+export {
+  methodCapabilitiesSchema,
+  methodCategorySchema,
+  methodStatusSchema,
+  forecastMethodDtoSchema,
+  forecastMethodListSchema,
+  forecastMethodQuerySchema,
+} from './forecasts/forecast-method.dto.js';
+
+export type {
+  MethodCapabilitiesDto,
+  MethodCategoryDto,
+  MethodStatusDto,
+  ForecastMethodDto,
+  ForecastMethodListDto,
+  ForecastMethodQueryDto,
+} from './forecasts/forecast-method.dto.js';
