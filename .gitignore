@@ -43,6 +43,7 @@ coverage/
 # OS files
 .DS_Store
 Thumbs.db
+.claude
 
 # Editors / IDEs
 .vscode/
