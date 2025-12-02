@@ -52,7 +52,7 @@
           href="/"
           class="text-slate-400 hover:text-slate-200 transition-colors"
         >
-          Home
+          Dashboard
         </a>
         <span class="mx-2 text-slate-600">/</span>
         <span class="text-slate-200">Forecast Accuracy</span>
