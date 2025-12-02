@@ -5,9 +5,9 @@
   import {
     MethodSelectorPanel,
     methodSelectorStore,
+    AccuracyTable,
     type MethodSelectorState,
   } from '$lib/features/forecasts';
-  import AccuracyTablePlaceholder from '$lib/features/forecasts/components/AccuracyTablePlaceholder.svelte';
 
   // Get course code from URL params
   const courseCode = $derived($page.params.code?.toUpperCase() ?? '');
@@ -140,7 +140,7 @@
           </div>
 
           <!-- Accuracy table -->
-          <AccuracyTablePlaceholder
+          <AccuracyTable
             {courseCode}
             method={state.selectedMethod}
           />
