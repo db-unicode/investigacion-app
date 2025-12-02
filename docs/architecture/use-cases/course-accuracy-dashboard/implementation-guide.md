@@ -713,19 +713,13 @@ export function useDebounce<T>(value: T, delay: number): T {
 
 ---
 
-### Step 9: Add Route Configuration
+### Step 9: Route Configuration
 
-**File:** Update `apps/frontend/src/routes.tsx`
+The Course Accuracy Dashboard is the default home page at `/`.
 
-```typescript
-import { CourseAccuracyDashboard } from './components/dashboard/CourseAccuracyDashboard';
+**File:** `apps/frontend/src/routes/+page.svelte`
 
-// Add to routes
-{
-  path: '/dashboard',
-  element: <CourseAccuracyDashboard />,
-}
-```
+The dashboard is implemented directly as the home page, replacing the previous Course History Viewer.
 
 ---
 
@@ -776,6 +770,8 @@ export function useDashboardUrl() {
     setSearchParams(newParams, { replace: true });
   }, [courseCode, selectedMethod, setSearchParams]);
 }
+
+// URL format: /?course=ISIS-3204&method=potential-students
 ```
 
 ---
@@ -784,28 +780,27 @@ export function useDashboardUrl() {
 
 ```
 apps/frontend/src/
-├── components/
-│   ├── dashboard/
-│   │   ├── CourseAccuracyDashboard.tsx
-│   │   ├── CourseAccuracyDashboard.css
-│   │   ├── CourseInput.tsx
-│   │   ├── SummaryTable.tsx
-│   │   ├── SummaryTableWithContext.tsx
-│   │   ├── AccuracyTableWithContext.tsx
-│   │   ├── DashboardEmptyState.tsx
-│   │   └── index.ts
-│   └── forecasts/
-│       ├── AccuracyTableContainer.tsx  (existing)
-│       └── MethodSelectorPanel.tsx     (existing)
-├── contexts/
-│   ├── DashboardContext.tsx            (new)
-│   └── MethodSelectorContext.tsx       (existing)
-├── hooks/
-│   ├── useDebounce.ts                  (new if not exists)
-│   ├── useCourseHistory.ts             (existing)
-│   ├── useForecastAccuracy.ts          (existing)
-│   └── useDashboardUrl.ts              (new, optional)
-└── routes.tsx                          (update)
+├── lib/
+│   └── features/
+│       ├── dashboard/
+│       │   ├── stores/
+│       │   │   └── dashboard.store.ts       (new)
+│       │   ├── components/
+│       │   │   ├── CourseInput.svelte       (new)
+│       │   │   ├── SummaryTable.svelte      (new)
+│       │   │   └── DashboardEmptyState.svelte (new)
+│       │   └── index.ts                     (new)
+│       ├── forecasts/
+│       │   ├── components/
+│       │   │   ├── AccuracyTable.svelte     (existing)
+│       │   │   └── MethodSelectorPanel.svelte (existing)
+│       │   └── stores/
+│       │       └── method-selector.store.ts (existing)
+│       └── course-history/
+│           └── api/
+│               └── course-history.api.ts    (existing)
+└── routes/
+    └── +page.svelte                         (dashboard - home page)
 ```
 
 ---

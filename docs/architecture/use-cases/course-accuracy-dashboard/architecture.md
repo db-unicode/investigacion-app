@@ -339,7 +339,7 @@ flowchart TB
 Persist dashboard state in URL for shareability:
 
 ```typescript
-// URL format: /dashboard?course=ISIS-3204&method=potential-students
+// URL format: /?course=ISIS-3204&method=potential-students
 
 function useDashboardUrl() {
   const [searchParams, setSearchParams] = useSearchParams();

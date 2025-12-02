@@ -816,14 +816,14 @@ describe('Course Accuracy Dashboard', () => {
   });
 
   it('should load and display dashboard', () => {
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByText(/enter a course code/i).should('be.visible');
     cy.findByLabelText('Course Code').should('be.visible');
   });
 
   it('should search for a course', () => {
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByLabelText('Course Code').type('ISIS-3204');
 
@@ -832,7 +832,7 @@ describe('Course Accuracy Dashboard', () => {
   });
 
   it('should display accuracy after method selection', () => {
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByLabelText('Course Code').type('ISIS-3204');
 
@@ -845,7 +845,7 @@ describe('Course Accuracy Dashboard', () => {
   });
 
   it('should handle invalid course code', () => {
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByLabelText('Course Code').type('INVALID');
 
@@ -858,7 +858,7 @@ describe('Course Accuracy Dashboard', () => {
       body: { error: 'Course not found' },
     });
 
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByLabelText('Course Code').type('XXXX-9999');
 
@@ -866,7 +866,7 @@ describe('Course Accuracy Dashboard', () => {
   });
 
   it('should persist state in URL', () => {
-    cy.visit('/dashboard?course=ISIS-3204&method=potential-students');
+    cy.visit('/?course=ISIS-3204&method=potential-students');
 
     cy.findByLabelText('Course Code').should('have.value', 'ISIS-3204');
     cy.findByText('Course History Summary').should('be.visible');
@@ -878,7 +878,7 @@ describe('Course Accuracy Dashboard', () => {
   });
 
   it('should be keyboard accessible', () => {
-    cy.visit('/dashboard');
+    cy.visit('/');
 
     cy.findByLabelText('Course Code').focus().type('ISIS-3204');
 

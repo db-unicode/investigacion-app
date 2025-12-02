@@ -217,24 +217,17 @@ const { data: history, isLoading, error } = useCourseHistory(courseCode);
 
 ## 5. Routing Impact
 
-### New Route
+### Home Page Route
 
-```typescript
-// apps/frontend/src/routes.tsx
-import { CourseAccuracyDashboard } from './components/dashboard/CourseAccuracyDashboard';
+The Course Accuracy Dashboard is now the default home page at `/`.
 
-export const routes = [
-  // ... existing routes
-  {
-    path: '/dashboard',
-    element: <CourseAccuracyDashboard />,
-  },
-];
+```
+apps/frontend/src/routes/+page.svelte  <- Dashboard (home page)
 ```
 
 ### Existing Routes
 
-No changes to existing routes. The dashboard is additive.
+The `/courses/[code]/accuracy` route remains available for direct course access with the course code in the URL.
 
 ---
 
@@ -327,11 +320,11 @@ See [Testing Guide](./testing-guide.md) for details:
 
 ## 11. Rollback Plan
 
-Since this is purely additive:
+To rollback to the previous home page:
 
-1. Remove the `/dashboard` route
-2. Delete new components in `components/dashboard/`
-3. Delete `DashboardContext`
+1. Restore the original `+page.svelte` with CourseHistoryPanel
+2. Delete new components in `lib/features/dashboard/`
+3. Delete `dashboard.store.ts`
 4. No changes to existing components to revert
 
 ---
@@ -340,10 +333,9 @@ Since this is purely additive:
 
 ### What Changes
 
-- New context: `DashboardContext`
-- New components: 7 new components in `components/dashboard/`
-- New route: `/dashboard`
-- New hook: `useDebounce` (if not exists)
+- New store: `dashboard.store.ts`
+- New components: 3 new Svelte components in `lib/features/dashboard/`
+- Home page (`/`): Now displays Course Accuracy Dashboard
 
 ### What Stays the Same
 
