@@ -24,6 +24,9 @@ import {
 import {
   registerForecastMethodsRoute,
 } from './controllers/forecasts/forecast-methods.controller';
+import {
+  registerSectionStatsRoute,
+} from './controllers/section-stats.controller';
 
 const DEFAULT_PORT = 3000;
 const PORT_ENV_VAR = 'PORT';
@@ -72,6 +75,9 @@ const createHttpApp = (): OpenAPIHono => {
 
   // Forecast methods routes.
   registerForecastMethodsRoute(app);
+
+  // Section stats routes.
+  registerSectionStatsRoute(app);
 
   return app;
 };

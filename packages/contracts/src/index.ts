@@ -69,3 +69,16 @@ export type {
   ForecastMethodListDto,
   ForecastMethodQueryDto,
 } from './forecasts/forecast-method.dto.js';
+
+// Section Stats
+export {
+  sectionStatSchema,
+  termSectionStatsSchema,
+  sectionStatsByTermSchema,
+} from './section-stats/section-stats.dto.js';
+
+export type {
+  SectionStatDto,
+  TermSectionStatsDto,
+  SectionStatsByTermDto,
+} from './section-stats/section-stats.dto.js';
