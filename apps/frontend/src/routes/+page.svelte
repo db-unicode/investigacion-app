@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
+  import { page } from '$app/stores';
   import { cn } from '$lib/utils/cn';
   import {
     CourseInput,
@@ -26,6 +27,14 @@
 
   const unsubscribeDashboard = dashboardStore.subscribe(value => {
     dashboardState = value;
+  });
+
+  // Initialize course code from URL query parameter
+  onMount(() => {
+    const courseFromUrl = $page.url.searchParams.get('course');
+    if (courseFromUrl && isCourseCodeValid(courseFromUrl.toUpperCase())) {
+      dashboardStore.setCourseCode(courseFromUrl);
+    }
   });
 
   // Subscribe to method selector store

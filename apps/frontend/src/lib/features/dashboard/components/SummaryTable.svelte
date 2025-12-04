@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { CourseHistoryByTerm } from '$lib/features/course-history/types/course-history.types';
+  import { goto } from '$app/navigation';
   import { cn } from '$lib/utils/cn';
   import { formatTerm, formatPercent } from '$lib/utils/formatters';
 
@@ -48,6 +49,11 @@
   const totalEnrollment = $derived.by(() => {
     return rows.reduce((sum, row) => sum + row.enrolled, 0);
   });
+
+  // Navigate to section summary page
+  function handleTermClick(term: number): void {
+    goto(`/courses/${courseCode}/sections/${term}`);
+  }
 </script>
 
 <section class={cn('space-y-4', className)}>
@@ -134,7 +140,14 @@
         </thead>
         <tbody class="divide-y divide-slate-800">
           {#each rows as row (row.academicTerm)}
-            <tr class="hover:bg-slate-800/60">
+            <tr
+              class="cursor-pointer hover:bg-slate-800/60 transition-colors"
+              onclick={() => handleTermClick(row.academicTerm)}
+              onkeydown={(e) => e.key === 'Enter' && handleTermClick(row.academicTerm)}
+              tabindex="0"
+              role="button"
+              aria-label="View section details for term {formatTerm(row.academicTerm)}"
+            >
               <td class="px-4 py-3 font-mono text-slate-100">
                 {formatTerm(row.academicTerm)}
               </td>
