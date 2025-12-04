@@ -20,7 +20,8 @@ This document analyzes the impact of adding the section summary page to the fron
 | Component | Location | Change Type | Risk |
 |-----------|----------|-------------|------|
 | `SummaryTable.svelte` | `src/lib/features/dashboard/components/` | Add navigation | Low |
-| `AccuracyTable.svelte` | `src/lib/features/forecasts/components/` | Add navigation (future) | Low |
+| `AccuracyTable.svelte` | `src/lib/features/forecasts/components/` | Add navigation | Low |
+| `+page.svelte` (Dashboard) | `src/routes/` | Read course query param | Low |
 
 ---
 
@@ -89,12 +90,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    DASH[Dashboard /] --> |Click Term| SEC[Sections /courses/.../sections/...]
-    DASH --> |Select Method| ACC[Accuracy /courses/.../accuracy]
-    ACC --> |Click Term| SEC
-    SEC --> |Breadcrumb| DASH
-    ACC --> |Breadcrumb| DASH
+    DASH[Dashboard /?course=CODE] --> |Click Term in SummaryTable| SEC[Sections /courses/.../sections/...]
+    DASH --> |Click Term in AccuracyTable| SEC
+    SEC --> |Back to Dashboard| DASH
 ```
+
+The section summary page navigates back to the Dashboard with the course code as a query parameter (`/?course={courseCode}`), ensuring the course input is pre-filled when returning.
 
 ### 4.3 User Journey Impact
 
@@ -103,6 +104,7 @@ flowchart LR
 | Term column is read-only | Term column is clickable, navigates to section details |
 | No section-level visibility | Full section breakdown available |
 | Single navigation level | Two-level navigation (dashboard → sections) |
+| N/A | Return navigation preserves course context |
 
 ---
 
@@ -119,8 +121,8 @@ The summary table and accuracy table must visually indicate that rows are clicka
 ### 5.2 Mental Model
 
 Users will learn that:
-- Clicking on a term navigates to section details
-- Breadcrumbs always lead back to dashboard
+- Clicking on a term row navigates to section details
+- Breadcrumbs and "Back to Dashboard" button return to the Dashboard with the same course loaded
 - Section page shows breakdown of aggregate data
 
 ### 5.3 Potential Confusion Points
@@ -168,10 +170,10 @@ The section summary page uses local component state via `$state` runes. This is 
 - No sharing with other pages required
 - Simple fetch → display flow
 
-### 7.2 Store Isolation
+### 7.2 Store Integration
 
-The new feature does not interact with existing stores:
-- `dashboardStore` - No changes
+The Dashboard page uses `dashboardStore` to load course data from the URL query parameter:
+- `dashboardStore` - Used to pre-fill course code when navigating back from section summary via `?course={code}` query parameter
 - `methodSelectorStore` - No changes
 
 ---
@@ -216,17 +218,7 @@ The implementation follows existing accessibility patterns established in `Accur
 
 ## 10. Future Considerations
 
-### 10.1 Query Parameter for Return Path
-
-A future enhancement could track the originating page:
-
-```
-/courses/ISIS-3204/sections/202410?from=accuracy
-```
-
-This would allow the "Back" functionality to return to the correct page instead of always going to the dashboard.
-
-### 10.2 Multi-Term View
+### 10.1 Multi-Term View
 
 The backend already supports querying multiple terms. A future enhancement could show section comparison across terms:
 
@@ -234,7 +226,7 @@ The backend already supports querying multiple terms. A future enhancement could
 /courses/ISIS-3204/sections?terms=202410,202420
 ```
 
-### 10.3 Section Comparison Dashboard
+### 10.2 Section Comparison Dashboard
 
 Long-term, section data could be visualized in charts comparing:
 - Section performance over time

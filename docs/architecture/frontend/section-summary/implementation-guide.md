@@ -209,6 +209,7 @@ export async function fetchSectionStats(
   let { courseCode, term, class: className = '' }: Props = $props();
 
   const formattedTerm = $derived(formatTerm(term));
+  const dashboardUrl = $derived(`/?course=${courseCode}`);
 </script>
 
 <header class={className}>
@@ -216,7 +217,7 @@ export async function fetchSectionStats(
   <nav class="mb-2 text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
       <li>
-        <a href="/" class="text-slate-400 hover:text-slate-200 transition-colors">
+        <a href={dashboardUrl} class="text-slate-400 hover:text-slate-200 transition-colors">
           Dashboard
         </a>
       </li>
@@ -224,7 +225,12 @@ export async function fetchSectionStats(
         <span class="text-slate-600">/</span>
       </li>
       <li>
-        <span class="text-slate-400">{courseCode}</span>
+        <a
+          href={dashboardUrl}
+          class="text-slate-400 hover:text-slate-200 transition-colors"
+        >
+          {courseCode}
+        </a>
       </li>
       <li>
         <span class="text-slate-600">/</span>
@@ -242,15 +248,28 @@ export async function fetchSectionStats(
   </nav>
 
   <!-- Page Title -->
-  <div class="mt-4">
-    <h1 class="text-2xl font-semibold text-slate-50">
-      Section Statistics
-    </h1>
-    <p class="text-slate-400 mt-1">
-      <span class="font-mono text-slate-200">{courseCode}</span>
-      <span class="mx-2">·</span>
-      <span>{formattedTerm}</span>
-    </p>
+  <div class="mt-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-50">
+        Section Statistics
+      </h1>
+      <p class="text-slate-400 mt-1">
+        <span class="font-mono text-slate-200">{courseCode}</span>
+        <span class="mx-2">·</span>
+        <span>{formattedTerm}</span>
+      </p>
+    </div>
+
+    <!-- Back to Dashboard link -->
+    <a
+      href={dashboardUrl}
+      class="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700 transition-colors"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Dashboard
+    </a>
   </div>
 </header>
 ```
@@ -733,7 +752,7 @@ Add clickable rows to navigate to section summary:
 </tbody>
 ```
 
-### 6.2 Update AccuracyTable.svelte (Future)
+### 6.2 Update AccuracyTable.svelte
 
 **Location**: `src/lib/features/forecasts/components/AccuracyTable.svelte`
 
@@ -746,7 +765,7 @@ Similar pattern - add clickable rows:
   // ... existing code ...
 
   function handleTermClick(term: number): void {
-    goto(`/courses/${courseCode}/sections/${term}?from=accuracy`);
+    goto(`/courses/${courseCode}/sections/${term}`);
   }
 </script>
 
@@ -754,10 +773,36 @@ Similar pattern - add clickable rows:
 <tr
   class="cursor-pointer hover:bg-slate-800/60 transition-colors"
   onclick={() => handleTermClick(row.academicTerm)}
+  onkeydown={(e) => e.key === 'Enter' && handleTermClick(row.academicTerm)}
   tabindex="0"
+  role="button"
+  aria-label="View section details for term {formatTerm(row.academicTerm)}"
 >
   <!-- ... existing cells ... -->
 </tr>
+```
+
+### 6.3 Update Dashboard to Read Course Query Parameter
+
+**Location**: `src/routes/+page.svelte`
+
+Add support for the `course` query parameter to pre-fill the course code when returning from section summary:
+
+```svelte
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+
+  // ... existing code ...
+
+  // Initialize course code from URL query parameter
+  onMount(() => {
+    const courseFromUrl = $page.url.searchParams.get('course');
+    if (courseFromUrl && isCourseCodeValid(courseFromUrl.toUpperCase())) {
+      dashboardStore.setCourseCode(courseFromUrl);
+    }
+  });
+</script>
 ```
 
 ---
@@ -774,7 +819,8 @@ Similar pattern - add clickable rows:
 - [ ] Test empty data state
 - [ ] Test error state with network disconnect
 - [ ] Test retry button functionality
-- [ ] Test breadcrumb navigation back to dashboard
+- [ ] Test breadcrumb navigation back to dashboard with course code pre-filled
+- [ ] Test "Back to Dashboard" button navigation
 - [ ] Test keyboard navigation (Tab, Enter on sortable headers)
 
 ### 7.2 Test Navigation from Dashboard
@@ -782,7 +828,15 @@ Similar pattern - add clickable rows:
 - [ ] Click on a term row in SummaryTable
 - [ ] Verify navigation to correct section summary page
 - [ ] Verify correct course code and term displayed
-- [ ] Click breadcrumb to return to dashboard
+- [ ] Click breadcrumb or "Back to Dashboard" button to return
+- [ ] Verify course code is pre-filled in Dashboard after return
+
+### 7.3 Test Navigation from AccuracyTable
+
+- [ ] Click on a term row in AccuracyTable
+- [ ] Verify navigation to correct section summary page
+- [ ] Click breadcrumb or "Back to Dashboard" button to return
+- [ ] Verify course code is pre-filled in Dashboard after return
 
 ### 7.3 Verify Accessibility
 
@@ -813,7 +867,8 @@ Similar pattern - add clickable rows:
 | File | Changes |
 |------|---------|
 | `src/lib/features/dashboard/components/SummaryTable.svelte` | Add click navigation to sections |
-| `src/lib/features/forecasts/components/AccuracyTable.svelte` | Add click navigation to sections (future) |
+| `src/lib/features/forecasts/components/AccuracyTable.svelte` | Add click navigation to sections |
+| `src/routes/+page.svelte` | Add course query parameter support for pre-filling course code |
 
 ---
 

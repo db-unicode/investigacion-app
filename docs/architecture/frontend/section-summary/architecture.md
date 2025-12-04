@@ -35,8 +35,7 @@ Create a new frontend page (`/courses/[code]/sections/[term]`) that:
 ```mermaid
 flowchart TB
     subgraph "Existing Pages"
-        DASH[Dashboard<br>/]
-        FORECAST[Forecast Accuracy<br>/courses/[code]/accuracy]
+        DASH[Dashboard<br>/?course=CODE]
     end
 
     subgraph "New Page"
@@ -47,9 +46,9 @@ flowchart TB
         API[GET /api/courses/{courseCode}/sections?term={term}]
     end
 
-    DASH -->|Click academic_term| SECTION
-    FORECAST -->|Click academic_term| SECTION
-    SECTION -->|Back navigation| DASH
+    DASH -->|Click academic_term in SummaryTable| SECTION
+    DASH -->|Click academic_term in AccuracyTable| SECTION
+    SECTION -->|Back navigation with course code| DASH
     SECTION -->|Fetch data| API
 ```
 
@@ -351,36 +350,50 @@ interface SectionSummaryData {
 
 ### 8.2 Exit Points (Back Navigation)
 
+The section summary page navigates back to the Dashboard with the course code pre-filled using a query parameter (`/?course={courseCode}`).
+
 ```svelte
 <!-- In SectionSummaryHeader.svelte -->
+<script lang="ts">
+  const dashboardUrl = $derived(`/?course=${courseCode}`);
+</script>
+
 <nav class="mb-2 text-sm">
-  <a href="/" class="text-slate-400 hover:text-slate-200">Dashboard</a>
+  <a href={dashboardUrl} class="text-slate-400 hover:text-slate-200">Dashboard</a>
   <span class="mx-2 text-slate-600">/</span>
-  <a href="/" class="text-slate-400 hover:text-slate-200">{courseCode}</a>
+  <a href={dashboardUrl} class="text-slate-400 hover:text-slate-200">{courseCode}</a>
   <span class="mx-2 text-slate-600">/</span>
   <span class="text-slate-200">Sections</span>
   <span class="mx-2 text-slate-600">/</span>
   <span class="text-slate-200">{formatTerm(term)}</span>
 </nav>
+
+<!-- Back to Dashboard button -->
+<a href={dashboardUrl} class="...">
+  Back to Dashboard
+</a>
 ```
 
-### 8.3 Future: Query Parameter for Return Path
+### 8.3 Dashboard Course Code Query Parameter
 
-To support returning to the correct originating page:
-
-```
-/courses/ISIS-3204/sections/202410?from=accuracy
-/courses/ISIS-3204/sections/202410?from=dashboard
-```
+The Dashboard page reads the `course` query parameter on mount to pre-fill the course code input:
 
 ```svelte
+<!-- In +page.svelte (Dashboard) -->
 <script lang="ts">
-  const from = $page.url.searchParams.get('from');
-  const backUrl = from === 'accuracy'
-    ? `/courses/${courseCode}/accuracy`
-    : '/';
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+
+  onMount(() => {
+    const courseFromUrl = $page.url.searchParams.get('course');
+    if (courseFromUrl && isCourseCodeValid(courseFromUrl.toUpperCase())) {
+      dashboardStore.setCourseCode(courseFromUrl);
+    }
+  });
 </script>
 ```
+
+This enables seamless navigation back to the Dashboard with the same course loaded.
 
 ---
 
