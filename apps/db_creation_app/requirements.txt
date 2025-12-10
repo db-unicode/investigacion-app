@@ -1,0 +1,11 @@
+# Database Creation App Requirements
+# Python 3.8+ required
+# No external dependencies - uses only standard library modules:
+# - sqlite3
+# - csv
+# - json
+# - logging
+# - argparse
+# - pathlib
+# - datetime
+# - typing
