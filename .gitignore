@@ -57,3 +57,62 @@ Thumbs.db
 *.bak
 *.csv
 prerequisites_systems_engineering.json
+
+# --- Python Bytecode (Archivos compilados) ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Entornos Virtuales (Virtual Environments) ---
+# Nombres comunes para carpetas de entorno
+venv/
+env/
+.env/
+.venv/
+ENV/
+
+# --- Distribución y Builds ---
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# --- Testing y Calidad de Código ---
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# --- Logs y Bases de datos locales ---
+*.log
+*.sqlite3
+
+# --- Variables de Entorno (SEGURIDAD) ---
+# Nunca subas tus llaves privadas o secretos
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- IDEs y Sistemas Operativos ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
