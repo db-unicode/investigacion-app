@@ -102,6 +102,17 @@ export type {
   WMAForecastDetailsDto,
 } from './forecasts/weighted-moving-average.dto.js';
 
+// Exponential Smoothing Forecaster
+export {
+  esTermWeightSchema,
+  esForecastDetailsSchema,
+} from './forecasts/exponential-smoothing.dto.js';
+
+export type {
+  ESTermWeightDto,
+  ESForecastDetailsDto,
+} from './forecasts/exponential-smoothing.dto.js';
+
 // Section Stats
 export {
   sectionStatSchema,

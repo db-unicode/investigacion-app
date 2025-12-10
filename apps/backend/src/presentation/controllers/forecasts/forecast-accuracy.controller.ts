@@ -5,6 +5,7 @@ import { ForecastAccuracyUseCase } from '../../../application/use-cases/forecast
 import { PotentialStudentsByPrerequisitesForecaster } from '../../../domain/forecasts/potential-students-by-prerequisites-forecaster';
 import { PassRateAdjustedForecaster } from '../../../domain/forecasts/pass-rate-adjusted-forecaster';
 import { WeightedMovingAverageForecaster } from '../../../domain/forecasts/weighted-moving-average-forecaster';
+import { ExponentialSmoothingForecaster } from '../../../domain/forecasts/exponential-smoothing-forecaster';
 import { DefaultConversionRateCalculator } from '../../../domain/forecasts/default-conversion-rate-calculator';
 import { BacktestingService } from '../../../domain/backtesting/backtesting-service';
 import { DefaultAccuracyCalculator } from '../../../domain/backtesting/default-accuracy-calculator';
@@ -69,6 +70,7 @@ const SUPPORTED_METHOD_IDS = [
   'potential-students-by-prerequisites',
   'pass-rate-adjusted',
   'weighted-moving-average',
+  'exponential-smoothing',
 ] as const;
 
 type SupportedMethodId = typeof SUPPORTED_METHOD_IDS[number];
@@ -137,11 +139,24 @@ export const registerForecastAccuracyRoute = (app: OpenAPIHono): void => {
     },
   );
 
+  // Create exponential-smoothing forecaster
+  const exponentialSmoothingForecaster = new ExponentialSmoothingForecaster(
+    {
+      termLookbackProvider,
+      actualEnrollmentProvider: actualProvider,
+    },
+    {
+      alpha: 0.3,
+      maxLookbackTerms: 10,
+    },
+  );
+
   // Map method ID to forecaster
   const forecasterMap: Record<SupportedMethodId, CourseDemandForecaster> = {
     'potential-students-by-prerequisites': baseForecaster,
     'pass-rate-adjusted': passRateAdjustedForecaster,
     'weighted-moving-average': weightedMovingAverageForecaster,
+    'exponential-smoothing': exponentialSmoothingForecaster,
   };
 
   app.openapi(forecastAccuracyRoute, async c => {

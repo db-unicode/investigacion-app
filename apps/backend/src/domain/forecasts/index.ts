@@ -66,6 +66,22 @@ export {
   type WMAForecasterOptions,
 } from './weighted-moving-average-forecaster';
 
+// Exponential Smoothing Forecaster
+export type {
+  ExponentialSmoothingConfig,
+  ESTermWeight,
+  ESForecastDetails,
+  ESForecastResult,
+} from './models';
+
+export { DEFAULT_ES_CONFIG, ALPHA_RANGE, ES_PRESETS } from './models';
+
+export {
+  ExponentialSmoothingForecaster,
+  type ESForecasterDeps,
+  type ESForecasterOptions,
+} from './exponential-smoothing-forecaster';
+
 export type {
   MethodCategory,
   MethodStatus,

@@ -56,4 +56,26 @@ export const FORECAST_METHODS: ForecastMethodMetadata[] = [
     },
     icon: 'trend',
   },
+  {
+    id: 'exponential-smoothing',
+    label: 'Exponential Smoothing (α=0.3)',
+    description:
+      'Forecasts enrollment using Simple Exponential Smoothing (SES). ' +
+      'Applies exponentially decaying weights to all historical terms, ' +
+      'with recent terms weighted more heavily. ' +
+      'Default smoothing parameter α=0.3 provides stable, conservative forecasts. ' +
+      'Uses term-type-aware lookback for main semesters (10, 20) and ' +
+      'intersessions (11-19) separately. ' +
+      'With α=0.3: T₁ gets 30%, T₂ gets 21%, T₃ gets 14.7%, etc.',
+    shortDescription: 'Exponential smoothing with α=0.3',
+    category: 'historical-trend',
+    status: 'active',
+    capabilities: {
+      supportsMultiTerm: true,
+      supportsBacktesting: true,
+      requiresPrerequisites: false,
+      requiresHistoricalData: true,
+    },
+    icon: 'smooth',
+  },
 ];

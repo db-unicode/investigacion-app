@@ -21,3 +21,17 @@ export type {
 } from './weighted-moving-average';
 
 export { DEFAULT_WMA_WEIGHTS } from './weighted-moving-average';
+
+// Exponential Smoothing models
+export type {
+  ExponentialSmoothingConfig,
+  ESTermWeight,
+  ESForecastDetails,
+  ESForecastResult,
+} from './exponential-smoothing';
+
+export {
+  DEFAULT_ES_CONFIG,
+  ALPHA_RANGE,
+  ES_PRESETS,
+} from './exponential-smoothing';
