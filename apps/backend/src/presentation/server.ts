@@ -25,6 +25,9 @@ import {
   registerForecastMethodsRoute,
 } from './controllers/forecasts/forecast-methods.controller';
 import {
+  registerPassRateAdjustedForecastRoute,
+} from './controllers/forecasts/pass-rate-adjusted.controller';
+import {
   registerSectionStatsRoute,
 } from './controllers/section-stats.controller';
 
@@ -69,6 +72,9 @@ const createHttpApp = (): OpenAPIHono => {
 
   // Forecast routes: potential students by prerequisites.
   registerPotentialStudentsForecastRoute(app);
+
+  // Forecast routes: pass rate adjusted (calibrated).
+  registerPassRateAdjustedForecastRoute(app);
 
   // Forecast accuracy & backtesting routes.
   registerForecastAccuracyRoute(app);

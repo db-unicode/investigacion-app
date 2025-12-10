@@ -20,5 +20,20 @@ export const FORECAST_METHODS: ForecastMethodMetadata[] = [
     },
     icon: 'prerequisites',
   },
-  // Additional methods can be added here
+  {
+    id: 'pass-rate-adjusted',
+    label: 'Pass Rate Adjusted',
+    description:
+      'Builds on the "Potential Students by Prerequisites" method by applying a historical conversion rate adjustment. First, it calculates the pool of eligible students who have completed all prerequisites (same as the base method). Then, it multiplies this count by a weighted average conversion rate derived from past terms, where conversion rate = actual enrollments / potential students. This calibration reduces over-prediction by accounting for the fact that not all eligible students enroll. Requires prerequisite data and historical enrollment records. Uses term-type-aware lookback (main semesters vs intersession).',
+    shortDescription: 'Prerequisites + historical conversion rate',
+    category: 'prerequisite-based',
+    status: 'active',
+    capabilities: {
+      supportsMultiTerm: true,
+      supportsBacktesting: true,
+      requiresPrerequisites: true,
+      requiresHistoricalData: true,
+    },
+    icon: 'calibrated',
+  },
 ];

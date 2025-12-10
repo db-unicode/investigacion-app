@@ -70,6 +70,19 @@ export type {
   ForecastMethodQueryDto,
 } from './forecasts/forecast-method.dto.js';
 
+// Pass Rate Adjusted Forecaster
+export {
+  conversionRateConfidenceSchema,
+  historicalRateSchema,
+  passRateAdjustedDetailsSchema,
+} from './forecasts/pass-rate-adjusted.dto.js';
+
+export type {
+  ConversionRateConfidenceDto,
+  HistoricalRateDto,
+  PassRateAdjustedDetailsDto,
+} from './forecasts/pass-rate-adjusted.dto.js';
+
 // Section Stats
 export {
   sectionStatSchema,

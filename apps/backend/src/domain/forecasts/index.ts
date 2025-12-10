@@ -20,6 +20,31 @@ export {
   type PrerequisitesProvider,
 } from './potential-students-by-prerequisites-forecaster';
 
+// Pass Rate Adjusted Forecaster
+export type {
+  ConversionRateConfidence,
+  HistoricalConversionData,
+  ConversionRateResult,
+  HistoricalRateEntry,
+  PassRateAdjustedDetails,
+  PassRateAdjustedResult,
+} from './models';
+
+export type { ConversionRateCalculator } from './conversion-rate-calculator';
+
+export {
+  DefaultConversionRateCalculator,
+  type ConversionRateCalculatorOptions,
+} from './default-conversion-rate-calculator';
+
+export type { HistoricalConversionProvider } from './historical-conversion-provider';
+
+export {
+  PassRateAdjustedForecaster,
+  type PassRateAdjustedForecasterDeps,
+  type PassRateAdjustedForecasterOptions,
+} from './pass-rate-adjusted-forecaster';
+
 export type {
   MethodCategory,
   MethodStatus,
