@@ -83,6 +83,25 @@ export type {
   PassRateAdjustedDetailsDto,
 } from './forecasts/pass-rate-adjusted.dto.js';
 
+// Weighted Moving Average Forecaster
+export {
+  termTypeSchema,
+  forecastConfidenceSchema,
+  wmaWeightConfigSchema,
+  termEnrollmentSchema,
+  adjustedWeightsSchema,
+  wmaForecastDetailsSchema,
+} from './forecasts/weighted-moving-average.dto.js';
+
+export type {
+  TermTypeDto,
+  ForecastConfidenceDto,
+  WMAWeightConfigDto,
+  TermEnrollmentDto,
+  AdjustedWeightsDto,
+  WMAForecastDetailsDto,
+} from './forecasts/weighted-moving-average.dto.js';
+
 // Section Stats
 export {
   sectionStatSchema,

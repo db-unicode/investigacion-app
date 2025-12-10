@@ -45,6 +45,27 @@ export {
   type PassRateAdjustedForecasterOptions,
 } from './pass-rate-adjusted-forecaster';
 
+// Weighted Moving Average Forecaster
+export type {
+  TermType,
+  ForecastConfidence,
+  WMAWeightConfig,
+  TermEnrollment,
+  AdjustedWeights,
+  WMAForecastDetails,
+  WMAForecastResult,
+} from './models';
+
+export { DEFAULT_WMA_WEIGHTS } from './models';
+
+export type { TermLookbackProvider } from './term-lookback-provider';
+
+export {
+  WeightedMovingAverageForecaster,
+  type WMAForecasterDeps,
+  type WMAForecasterOptions,
+} from './weighted-moving-average-forecaster';
+
 export type {
   MethodCategory,
   MethodStatus,

@@ -4,11 +4,13 @@ import { forecastAccuracyResultSchema } from '@app/contracts';
 import { ForecastAccuracyUseCase } from '../../../application/use-cases/forecasts/forecast-accuracy.use-case';
 import { PotentialStudentsByPrerequisitesForecaster } from '../../../domain/forecasts/potential-students-by-prerequisites-forecaster';
 import { PassRateAdjustedForecaster } from '../../../domain/forecasts/pass-rate-adjusted-forecaster';
+import { WeightedMovingAverageForecaster } from '../../../domain/forecasts/weighted-moving-average-forecaster';
 import { DefaultConversionRateCalculator } from '../../../domain/forecasts/default-conversion-rate-calculator';
 import { BacktestingService } from '../../../domain/backtesting/backtesting-service';
 import { DefaultAccuracyCalculator } from '../../../domain/backtesting/default-accuracy-calculator';
 import { CourseHistoryActualProvider } from '../../../infrastructure/providers/course-history-actual-provider';
 import { DatabaseHistoricalConversionProvider } from '../../../infrastructure/providers/database-historical-conversion-provider';
+import { DefaultTermLookbackProvider } from '../../../infrastructure/providers/default-term-lookback-provider';
 import { enrollmentRepository } from '../../../infrastructure/repositories/enrollment-repository';
 import { enrollmentForecastRepository } from '../../../infrastructure/repositories/enrollment-forecast-repository';
 import { prerequisitesRepository } from '../../../infrastructure/repositories/prerequisites-repository';
@@ -66,6 +68,7 @@ const forecastAccuracyRoute = createRoute({
 const SUPPORTED_METHOD_IDS = [
   'potential-students-by-prerequisites',
   'pass-rate-adjusted',
+  'weighted-moving-average',
 ] as const;
 
 type SupportedMethodId = typeof SUPPORTED_METHOD_IDS[number];
@@ -119,10 +122,26 @@ export const registerForecastAccuracyRoute = (app: OpenAPIHono): void => {
     },
   );
 
+  // Create weighted-moving-average forecaster
+  const termLookbackProvider = new DefaultTermLookbackProvider({
+    minYear: 2018,
+  });
+
+  const weightedMovingAverageForecaster = new WeightedMovingAverageForecaster(
+    {
+      termLookbackProvider,
+      actualEnrollmentProvider: actualProvider,
+    },
+    {
+      lookbackTerms: 3,
+    },
+  );
+
   // Map method ID to forecaster
   const forecasterMap: Record<SupportedMethodId, CourseDemandForecaster> = {
     'potential-students-by-prerequisites': baseForecaster,
     'pass-rate-adjusted': passRateAdjustedForecaster,
+    'weighted-moving-average': weightedMovingAverageForecaster,
   };
 
   app.openapi(forecastAccuracyRoute, async c => {

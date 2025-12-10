@@ -28,6 +28,9 @@ import {
   registerPassRateAdjustedForecastRoute,
 } from './controllers/forecasts/pass-rate-adjusted.controller';
 import {
+  registerWeightedMovingAverageForecastRoute,
+} from './controllers/forecasts/weighted-moving-average.controller';
+import {
   registerSectionStatsRoute,
 } from './controllers/section-stats.controller';
 
@@ -75,6 +78,9 @@ const createHttpApp = (): OpenAPIHono => {
 
   // Forecast routes: pass rate adjusted (calibrated).
   registerPassRateAdjustedForecastRoute(app);
+
+  // Forecast routes: weighted moving average (trend-based).
+  registerWeightedMovingAverageForecastRoute(app);
 
   // Forecast accuracy & backtesting routes.
   registerForecastAccuracyRoute(app);

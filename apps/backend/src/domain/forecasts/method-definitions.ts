@@ -36,4 +36,24 @@ export const FORECAST_METHODS: ForecastMethodMetadata[] = [
     },
     icon: 'calibrated',
   },
+  {
+    id: 'weighted-moving-average',
+    label: 'Weighted Moving Average (3-term WMA)',
+    description:
+      'Forecasts enrollment using a 3-term Weighted Moving Average of past enrollments. ' +
+      'Fixed weights: 50% (most recent term), 30% (previous term), 20% (third most recent). ' +
+      'Uses term-type-aware lookback: main semesters (10, 20) are compared with other main semesters, ' +
+      'while intersessions (11-19) are compared with the same intersession type from previous years. ' +
+      'Gracefully handles edge cases with fewer than 3 terms by normalizing weights.',
+    shortDescription: '3-term weighted moving average',
+    category: 'historical-trend',
+    status: 'active',
+    capabilities: {
+      supportsMultiTerm: true,
+      supportsBacktesting: true,
+      requiresPrerequisites: false,
+      requiresHistoricalData: true,
+    },
+    icon: 'trend',
+  },
 ];
