@@ -1,0 +1,70 @@
+---
+title: BAC-09 · Extensión del metamodelo de Integración v1.1 · Preocupacion y Tension (aprobada por el líder)
+config:
+  layout: elk
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+classDiagram
+  direction TB
+  %% Clases en gris de contexto: ya existen en el metamodelo v1.1 (06). Solo se muestran las que la extensión referencia.
+  class RutaExpress
+  class Extremo {
+    <<abstract>>
+    id: EString
+    nombre: EString
+  }
+  class Sistema
+  class Area
+  class Intercambio
+  class ModalidadEntrega
+  class Fuente
+  class Preocupacion {
+    id: EString
+    tipo: TipoPreocupacion
+    preocupacion: EString
+    impactoDeclarado: EString
+    evidenciaQuePuedeAportar: EString
+    nivel: NivelInformacion
+  }
+  class Tension {
+    id: EString
+    posicionA: EString
+    posicionB: EString
+    puntoDeContradiccion: EString
+    hechoDelCasoRelacionado: EString
+    evidenciaQueLaResolveria: EString
+    origen: OrigenTension
+  }
+  class TipoPreocupacion {
+    <<enumeration>>
+    NEGOCIO
+    TI
+  }
+  class NivelInformacion {
+    <<enumeration>>
+    HECHO
+    AFIRMACION_AREA
+    HIPOTESIS
+  }
+  class OrigenTension {
+    <<enumeration>>
+    DECLARADA_EN_FUENTE
+    DERIVADA_POR_ANALISTA
+  }
+
+  Extremo <|-- Sistema
+  Extremo <|-- Area
+
+  RutaExpress --> "preocupaciones *" Preocupacion
+  RutaExpress --> "tensiones *" Tension
+
+  Preocupacion --> "area 1" Area
+  Preocupacion --> "ubicaEnSistemas *" Sistema
+  Preocupacion --> "ubicaEnIntercambios *" Intercambio
+  Preocupacion --> "modalidadesAfectadas *" ModalidadEntrega
+  Preocupacion --> "fuentes 1..*" Fuente
+
+  Tension --> "areasEnTension *" Area
+  Tension --> "fuentes 1..*" Fuente

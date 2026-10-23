@@ -1,0 +1,80 @@
+---
+title: PV-PRE-2 · Dónde ubica el problema cada área y en qué tensiona (iteración 2, propuesta)
+config:
+  layout: elk
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart LR
+  %% Lenguaje (propuesto, BAC-13):
+  %%   hexágono = Area | rectángulo = Sistema | rectángulo con barras = Intercambio (como destino de "ubica")
+  %%   rombo naranja = Tension (id y 3 a 5 palabras)
+  %%   flecha rotulada "ubica" = el área ubica el problema en ese sistema o intercambio
+  %%   línea gruesa naranja = el área participa o es tocada por la tensión
+  %%   borde punteado = el área no tiene preocupación registrada (POR LEVANTAR)
+  %% Regla de la vista: solo Areas, Sistemas e Intercambios que aparecen en ubicaEn o en una Tension.
+  %% Las citas literales están en Preocupacion.csv y Tension.csv, no en el grafo.
+  %% No se usan flecha punteada ni flecha roja gruesa: están reservadas a Intercambio en PV-INT-2.
+
+  A1{{"ARE-01<br/>Centro de atención al cliente"}}
+  A2{{"ARE-02<br/>Operaciones"}}
+  A3{{"ARE-03<br/>Producto"}}
+  A4{{"ARE-04<br/>Finanzas"}}
+  A5{{"ARE-05<br/>Comercial"}}
+  A6{{"ARE-06<br/>Gerencia"}}
+
+  S3["SIS-03<br/>Conector de terceros"]
+  S4["SIS-04<br/>App de conductor"]
+  S5["SIS-05<br/>Liquidación y pagos"]
+
+  I03[["INT-03<br/>Envío a aliada por conector"]]
+  I05[["INT-05<br/>Confirmación al marketplace"]]
+  I07[["INT-07<br/>Reporte de aliada por correo"]]
+  I10[["INT-10<br/>Consolidación en liquidación"]]
+
+  T1{"TEN-01<br/>conector vs app"}
+  T2{"TEN-02<br/>abajo vs arriba"}
+  T3{"TEN-03<br/>plazo vs ubicaciones"}
+  T4{"TEN-04<br/>plazo vs decisión"}
+  T5{"TEN-05<br/>tiempo real vs correo"}
+  T6{"TEN-06<br/>reclamos de conductores"}
+  T7{"TEN-07<br/>disputas de marketplaces"}
+
+  A2 -->|ubica| S3
+  A2 -->|ubica| I03
+  A3 -->|ubica| S4
+  A3 -->|ubica| I05
+  A4 -->|ubica| S5
+  A4 -->|ubica| I10
+
+  A2 --- T1
+  A3 --- T1
+  A4 --- T2
+  A2 --- T2
+  A3 --- T2
+  A5 --- T3
+  A2 --- T3
+  A3 --- T3
+  A4 --- T3
+  A5 --- T4
+  A6 --- T4
+  T5 --- I07
+  A4 --- T6
+  A4 --- T7
+  A5 --- T7
+
+  classDef area fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef sistema fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef intercambio fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef tension fill:#ffffff,stroke:#b45309,stroke-width:2.5px,color:#111827
+  classDef porLevantar fill:#ffffff,stroke:#6b7280,stroke-width:1.5px,stroke-dasharray:5 5,color:#111827
+
+  class A2,A3,A4,A5,A6 area
+  class A1 porLevantar
+  class S3,S4,S5 sistema
+  class I03,I05,I07,I10 intercambio
+  class T1,T2,T3,T4,T5,T6,T7 tension
+
+  linkStyle 0,1,2,3,4,5 stroke:#111827,stroke-width:2px
+  linkStyle 6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 stroke:#b45309,stroke-width:3px
