@@ -1,0 +1,37 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+  %% PLANTILLA VACIA - Mapa de integracion (PV-INT-2: Extremo + Intercambio + Problema)
+  %% Lenguaje grafico BAC-13:
+  %%   Sistema = rectangulo | ParticipanteExterno = rectangulo redondeado (estadio) | Area = hexagono
+  %%   Intercambio = flecha de origen a destino, rotulada con id / grupos transportados / mecanismo
+  %%   Mecanismo CORREO_ELECTRONICO o CONSULTA_MANUAL = flecha punteada
+  %%   Intercambio con Problema = flecha roja gruesa
+  %% Los nodos y flechas de abajo son marcadores de estructura, NO datos del caso.
+  %% Se reemplazan por los extremos e intercambios diligenciados en formato_levantamiento_integracion.xlsx.
+  %% Orden de los linkStyle = orden de definicion de las flechas (empieza en 0).
+
+  %% --- Extremos ---
+  S1["Sistema.id / Sistema.nombre"]
+  S2["Sistema.id / Sistema.nombre"]
+  X1(["ParticipanteExterno.id / ParticipanteExterno.nombre"])
+  X2(["ParticipanteExterno.id / ParticipanteExterno.nombre"])
+  A1{{"Area.id / Area.nombre"}}
+
+  %% --- Intercambios ---
+  %% 0: intercambio normal (flecha continua)
+  S1 -->|"Intercambio.id / grupos transportados / mecanismo"| X1
+  %% 1: intercambio normal (flecha continua)
+  X1 -->|"Intercambio.id / grupos transportados / mecanismo"| S2
+  %% 2: mecanismo CORREO_ELECTRONICO o CONSULTA_MANUAL (flecha punteada)
+  S2 -.->|"Intercambio.id / grupos transportados / mecanismo"| A1
+  %% 3: intercambio con Problema (flecha roja gruesa)
+  S1 ==>|"Intercambio.id / grupos transportados / mecanismo"| X2
+  %% 4: PROVISIONAL, pendiente de decision del arquitecto lider.
+  %%    Intercambio punteado que ademas tiene Problema (BAC-13 no define la combinacion).
+  S2 -.->|"Intercambio.id / grupos transportados / mecanismo"| X2
+
+  linkStyle 3 stroke:#d00000,stroke-width:4px
+  linkStyle 4 stroke:#d00000,stroke-width:4px,stroke-dasharray:5 5

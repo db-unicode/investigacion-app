@@ -1,0 +1,108 @@
+---
+title: BAC-09 · Metamodelo del dominio de Integración (AS-IS) · RutaExpress
+config:
+  layout: elk
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+classDiagram
+  direction TB
+  class RutaExpress
+  class Extremo {
+    <<abstract>>
+    id: EString
+    nombre: EString
+  }
+  class Sistema {
+    funcion: EString
+    tecnologia: EString
+  }
+  class ParticipanteExterno {
+    pais: EString
+  }
+  class Area {
+    lider: EString
+  }
+  class Intercambio {
+    id: EString
+    nombre: EString
+    mecanismo: Mecanismo
+    oportunidad: Oportunidad
+    latenciaObservada: EString
+    transformaFormato: EBoolean
+    volumenDiario: EInt
+  }
+  class GrupoInformacion {
+    id: EString
+    nombre: EString
+    descripcion: EString
+  }
+  class EstadoPedido {
+    nombre: EString
+    descripcion: EString
+  }
+  class ModalidadEntrega {
+    nombre: EString
+  }
+  class Problema {
+    id: EString
+    descripcion: EString
+    efecto: EString
+  }
+  class Fuente {
+    id: EString
+    nombre: EString
+    tipo: TipoFuente
+    fecha: EDate
+  }
+  class Mecanismo {
+    <<enumeration>>
+    INTEGRACION_SISTEMA
+    CONECTOR_TERCEROS
+    CORREO_ELECTRONICO
+    CONSULTA_MANUAL
+    POR_LEVANTAR
+  }
+  class Oportunidad {
+    <<enumeration>>
+    TIEMPO_REAL
+    DIFERIDA
+    POR_LEVANTAR
+  }
+  class TipoFuente {
+    <<enumeration>>
+    ENUNCIADO_CASO
+    DOCUMENTO
+    ENTREVISTA
+    REGISTRO_SISTEMA
+  }
+
+  RutaExpress --> "sistemas *" Sistema
+  RutaExpress --> "marketplaces *" ParticipanteExterno
+  RutaExpress --> "aliados *" ParticipanteExterno
+  RutaExpress --> "areas *" Area
+  RutaExpress --> "intercambios *" Intercambio
+  RutaExpress --> "gruposInformacion *" GrupoInformacion
+  RutaExpress --> "estados *" EstadoPedido
+  RutaExpress --> "modalidades *" ModalidadEntrega
+  RutaExpress --> "fuentes *" Fuente
+
+  Extremo <|-- Sistema
+  Extremo <|-- ParticipanteExterno
+  Extremo <|-- Area
+
+  Intercambio --> "origen 1" Extremo
+  Intercambio --> "destino 1" Extremo
+  Intercambio --> "transporta *" GrupoInformacion
+  Intercambio --> "estadosReportados *" EstadoPedido
+  Intercambio --> "modalidades *" ModalidadEntrega
+  Intercambio --> "problemas *" Problema
+  Intercambio --> "fuentes *" Fuente
+
+  Sistema --> "responsable 0..1" Area
+  GrupoInformacion --> "productor 0..1" Sistema
+  EstadoPedido --> "siguientes *" EstadoPedido
+  Problema --> "reportadoPor *" Area
+  Problema --> "afectados *" Sistema
+  Problema --> "fuentes *" Fuente
