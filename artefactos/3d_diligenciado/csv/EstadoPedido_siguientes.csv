@@ -1,0 +1,6 @@
+EstadoPedido,siguientes,Fuente,Nivel
+En ruteo,Asignado,"FUE-01 §Caso de estudio, párr. 2: «pasa al sistema de asignación y ruteo, que calcula la ruta óptima y asigna un conductor disponible según zona y capacidad»",HECHO
+Asignado,Recogida,"FUE-01 §Caso de estudio, párr. 2: «Una vez asignado, el conductor recibe el pedido en la app de conductor, que registra recogida, tránsito y entrega, incluyendo evidencia fotográfica y firma digital»",HECHO
+Recogida,En tránsito,"FUE-01 §Caso de estudio, párr. 2: «registra recogida, tránsito y entrega»",HECHO
+En tránsito,Entregado,"FUE-01 §Caso de estudio, párr. 2: «registra recogida, tránsito y entrega»",HECHO
+Entrega fallida,En ruteo,"FUE-01 §Caso de estudio, párr. 3: «Un pedido puede fallar en la entrega y reingresar al flujo de ruteo»",HECHO

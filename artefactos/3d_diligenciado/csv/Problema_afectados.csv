@@ -1,0 +1,4 @@
+Problema,afectados,Fuente,Nivel
+PRB-01,SIS-05,"FUE-01 §Caso de estudio, párr. 3: «Estos desfases afectan directamente la liquidación: hay conductores que reclaman pagos por entregas que el sistema no reconoce, y marketplaces que disputan cobros por SLAs que según ellos no se cumplieron.»",HIPOTESIS
+PRB-02,SIS-05,"FUE-01 §Caso de estudio, párr. 3: «Estos desfases afectan directamente la liquidación: hay conductores que reclaman pagos por entregas que el sistema no reconoce, y marketplaces que disputan cobros por SLAs que según ellos no se cumplieron.»",HIPOTESIS
+PRB-06,SIS-05,"FUE-01 §Caso de estudio, párr. 5: «Finanzas afirma que el verdadero problema es que liquidación no tiene cómo validar entregas de forma independiente»",AFIRMACION_AREA

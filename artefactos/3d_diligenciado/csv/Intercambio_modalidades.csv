@@ -1,0 +1,6 @@
+Intercambio,modalidades,Fuente,Nivel
+INT-02,Flota propia,"FUE-01 §Caso de estudio, párr. 2: «Si el pedido requiere flota propia o afiliados»",HECHO
+INT-02,Afiliado,"FUE-01 §Caso de estudio, párr. 2: «Si el pedido requiere flota propia o afiliados»",HECHO
+INT-03,Transportadora aliada,"FUE-01 §Caso de estudio, párr. 2: «Si el pedido va por transportadora aliada, se envía a través de un conector de terceros que traduce el formato interno al que cada aliado requiere»",HECHO
+INT-06,Transportadora aliada,"FUE-01 §Caso de estudio, párr. 3: «una transportadora aliada puede reportar el estado por correo en lugar de hacerlo por el conector, generando que el pedido quede “en tránsito” en el sistema interno mientras ya fue entregado»",HECHO
+INT-07,Transportadora aliada,"FUE-01 §Caso de estudio, párr. 3: «una transportadora aliada puede reportar el estado por correo en lugar de hacerlo por el conector, generando que el pedido quede “en tránsito” en el sistema interno mientras ya fue entregado»",HECHO

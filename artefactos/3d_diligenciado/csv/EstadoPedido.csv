@@ -1,0 +1,7 @@
+nombre,descripcion,Fuente,Nivel
+En ruteo,"Pedido dentro del flujo de ruteo (sistema de asignación y ruteo), al que también reingresa tras una entrega fallida. El enunciado no nombra este estado.","FUE-01 §Caso de estudio, párr. 2: «pasa al sistema de asignación y ruteo, que calcula la ruta óptima y asigna un conductor disponible según zona y capacidad» · párr. 3: «Un pedido puede fallar en la entrega y reingresar al flujo de ruteo»",HECHO
+Asignado,Pedido con conductor asignado por el sistema de asignación y ruteo.,"FUE-01 §Caso de estudio, párr. 2: «Una vez asignado, el conductor recibe el pedido en la app de conductor»",HECHO
+Recogida,"Recogida del pedido, registrada en la app de conductor.","FUE-01 §Caso de estudio, párr. 2: «registra recogida, tránsito y entrega»",HECHO
+En tránsito,Pedido en tránsito. Es también el estado que queda en el sistema interno cuando la aliada reporta por correo.,"FUE-01 §Caso de estudio, párr. 2: «registra recogida, tránsito y entrega» · párr. 3: «“en tránsito”»",HECHO
+Entregado,Entrega completada.,"FUE-01 §Caso de estudio, párr. 3: «marcar una entrega como completada» · párr. 3: «mientras ya fue entregado»",HECHO
+Entrega fallida,El pedido falla en la entrega y puede reingresar al flujo de ruteo.,"FUE-01 §Caso de estudio, párr. 3: «Un pedido puede fallar en la entrega y reingresar al flujo de ruteo»",HECHO

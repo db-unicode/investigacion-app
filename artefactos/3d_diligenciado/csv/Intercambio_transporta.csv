@@ -1,0 +1,13 @@
+Intercambio,transporta,Fuente,Nivel
+INT-01,GRP-01,"FUE-01 §Caso de estudio, párr. 2: «un marketplace envía un pedido a través de la plataforma de integración de pedidos» · párr. 4: «La plataforma de integración captura los datos iniciales del pedido.»",HECHO
+INT-02,GRP-01,"FUE-01 §Caso de estudio, párr. 2: «pasa al sistema de asignación y ruteo, que calcula la ruta óptima y asigna un conductor disponible según zona y capacidad»",HECHO
+INT-03,GRP-01,"FUE-01 §Caso de estudio, párr. 2: «Si el pedido va por transportadora aliada, se envía a través de un conector de terceros que traduce el formato interno al que cada aliado requiere»",HECHO
+INT-04,GRP-01,"FUE-01 §Caso de estudio, párr. 2: «Una vez asignado, el conductor recibe el pedido en la app de conductor, que registra recogida, tránsito y entrega, incluyendo evidencia fotográfica y firma digital»",HECHO
+INT-05,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
+INT-06,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
+INT-07,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
+INT-08,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
+INT-09,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
+INT-10,GRP-01,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO
+INT-10,GRP-02,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO
+INT-10,GRP-03,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO

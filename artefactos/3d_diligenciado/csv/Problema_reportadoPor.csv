@@ -1,0 +1,4 @@
+Problema,reportadoPor,Fuente,Nivel
+PRB-04,ARE-02,"FUE-01 §Caso de estudio, párr. 5: «Operaciones dice que el problema es el conector de terceros, que traduce mal y tarde»",AFIRMACION_AREA
+PRB-05,ARE-03,"FUE-01 §Caso de estudio, párr. 5: «Producto insiste en que el problema es que la app de conductor no fuerza actualización de estado en tiempo real»",AFIRMACION_AREA
+PRB-06,ARE-04,"FUE-01 §Caso de estudio, párr. 5: «Finanzas afirma que el verdadero problema es que liquidación no tiene cómo validar entregas de forma independiente»",AFIRMACION_AREA

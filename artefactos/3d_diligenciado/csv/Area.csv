@@ -1,0 +1,6 @@
+id,nombre,lider,Fuente,Nivel
+ARE-01,Centro de atención al cliente,POR LEVANTAR,"FUE-01 §Caso de estudio, párr. 2: «el centro de atención al cliente recibe consultas sobre el estado del pedido a través de WhatsApp, línea telefónica y un chat embebido en el sitio del marketplace»",HECHO
+ARE-02,Operaciones,POR LEVANTAR,"FUE-01 §Caso de estudio, párr. 5: «Operaciones dice que el problema es el conector de terceros, que traduce mal y tarde»",HECHO
+ARE-03,Producto,POR LEVANTAR,"FUE-01 §Caso de estudio, párr. 5: «Producto insiste en que el problema es que la app de conductor no fuerza actualización de estado en tiempo real»",HECHO
+ARE-04,Finanzas,POR LEVANTAR,"FUE-01 §Caso de estudio, párr. 5: «Finanzas afirma que el verdadero problema es que liquidación no tiene cómo validar entregas de forma independiente»",HECHO
+ARE-05,Comercial,POR LEVANTAR,"FUE-01 §Caso de estudio, párr. 5: «Comercial presiona porque el contrato se firma en 10 semanas y no puede esperar un rediseño completo»",HECHO

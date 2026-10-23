@@ -1,0 +1,3 @@
+Intercambio,estadosReportados,Fuente,Nivel
+INT-05,Entregado,"FUE-01 §Caso de estudio, párr. 3: «un conductor puede marcar una entrega como completada en la app sin que el marketplace reciba la confirmación a tiempo por una falla en la integración»",HECHO
+INT-07,Entregado,"FUE-01 §Caso de estudio, párr. 3: «una transportadora aliada puede reportar el estado por correo en lugar de hacerlo por el conector, generando que el pedido quede “en tránsito” en el sistema interno mientras ya fue entregado»",HECHO

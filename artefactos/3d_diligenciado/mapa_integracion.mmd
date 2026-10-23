@@ -1,0 +1,61 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+  %% MAPA DE INTEGRACION DILIGENCIADO (PV-INT-2: Extremo + Intercambio + Problema)
+  %% Fuente unica de hechos: FUE-01 (enunciado del caso). Datos tomados de formato_levantamiento_integracion v1.1.
+  %% Lenguaje grafico BAC-13: Sistema = rectangulo | ParticipanteExterno = estadio | Area = hexagono
+  %% Intercambio = flecha origen -> destino rotulada con id / grupos transportados / mecanismo
+  %% CORREO_ELECTRONICO o CONSULTA_MANUAL = flecha punteada | Intercambio con Problema = flecha roja gruesa
+  %% Punteada y con Problema = punteada, roja y gruesa (combinacion aprobada por el Arquitecto Lider).
+  %% Extremo no registrado = circulo punteado 'POR LEVANTAR' (representacion PROVISIONAL, no definida en BAC-13).
+  %% Aparecen todos los Sistema y ParticipanteExterno, y las Area que son origen o destino de un Intercambio.
+  %% SIS-03 (conector de terceros) no es origen ni destino: el metamodelo no expresa 'a traves de' (ver B9).
+
+  %% --- Extremos ---
+  SIS_01["SIS-01 / Plataforma de integración de pedidos"]
+  SIS_02["SIS-02 / Sistema de asignación y ruteo"]
+  SIS_03["SIS-03 / Conector de terceros"]
+  SIS_04["SIS-04 / App de conductor"]
+  SIS_05["SIS-05 / Sistema de liquidación y pagos"]
+  EXT_01(["EXT-01 / Marketplace"])
+  EXT_02(["EXT-02 / Transportadora aliada"])
+  ARE_01{{"ARE-01 / Centro de atención al cliente"}}
+
+  %% --- Extremos POR LEVANTAR ---
+  PL_INT_04_origen(("POR LEVANTAR: origen de INT-04")):::porLevantar
+  PL_INT_05_origen(("POR LEVANTAR: origen de INT-05")):::porLevantar
+  PL_INT_06_destino(("POR LEVANTAR: destino de INT-06")):::porLevantar
+  PL_INT_07_destino(("POR LEVANTAR: destino de INT-07")):::porLevantar
+  PL_INT_08_origen(("POR LEVANTAR: origen de INT-08")):::porLevantar
+  PL_INT_09_origen(("POR LEVANTAR: origen de INT-09")):::porLevantar
+  PL_INT_10_origen(("POR LEVANTAR: origen de INT-10")):::porLevantar
+
+  %% --- Intercambios (el orden define el indice de linkStyle) ---
+  %% 0: INT-01 (continua)
+  EXT_01 -->|"INT-01 / Datos del pedido / POR_LEVANTAR"| SIS_01
+  %% 1: INT-02 (continua)
+  SIS_01 -->|"INT-02 / Datos del pedido / POR_LEVANTAR"| SIS_02
+  %% 2: INT-03 (continua, roja gruesa (tiene Problema))
+  SIS_01 ==>|"INT-03 / Datos del pedido / CONECTOR_TERCEROS"| EXT_02
+  %% 3: INT-04 (continua)
+  PL_INT_04_origen -->|"INT-04 / Datos del pedido / POR_LEVANTAR"| SIS_04
+  %% 4: INT-05 (continua, roja gruesa (tiene Problema))
+  PL_INT_05_origen ==>|"INT-05 / POR LEVANTAR / POR_LEVANTAR"| EXT_01
+  %% 5: INT-06 (continua)
+  EXT_02 -->|"INT-06 / POR LEVANTAR / CONECTOR_TERCEROS"| PL_INT_06_destino
+  %% 6: INT-07 (punteada, roja gruesa (tiene Problema))
+  EXT_02 -.->|"INT-07 / POR LEVANTAR / CORREO_ELECTRONICO"| PL_INT_07_destino
+  %% 7: INT-08 (continua)
+  PL_INT_08_origen -->|"INT-08 / POR LEVANTAR / POR_LEVANTAR"| ARE_01
+  %% 8: INT-09 (punteada)
+  PL_INT_09_origen -.->|"INT-09 / POR LEVANTAR / CONSULTA_MANUAL"| ARE_01
+  %% 9: INT-10 (continua)
+  PL_INT_10_origen -->|"INT-10 / Datos del pedido, Datos de ruteo y asignación, Datos de evidencia de entrega / POR_LEVANTAR"| SIS_05
+
+  linkStyle 2 stroke:#d00000,stroke-width:4px
+  linkStyle 4 stroke:#d00000,stroke-width:4px
+  linkStyle 6 stroke:#d00000,stroke-width:4px,stroke-dasharray:5 5
+
+  classDef porLevantar stroke-dasharray:5 5,fill:none

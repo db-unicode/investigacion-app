@@ -1,0 +1,19 @@
+Enumeracion,Valor
+Mecanismo,INTEGRACION_SISTEMA
+Mecanismo,CONECTOR_TERCEROS
+Mecanismo,CORREO_ELECTRONICO
+Mecanismo,CONSULTA_MANUAL
+Mecanismo,POR_LEVANTAR
+Oportunidad,TIEMPO_REAL
+Oportunidad,DIFERIDA
+Oportunidad,POR_LEVANTAR
+TipoFuente,ENUNCIADO_CASO
+TipoFuente,DOCUMENTO
+TipoFuente,ENTREVISTA
+TipoFuente,REGISTRO_SISTEMA
+EBoolean (`transformaFormato`),VERDADERO
+EBoolean (`transformaFormato`),FALSO
+EBoolean (`transformaFormato`),POR LEVANTAR
+Nivel (columna de formato),HECHO
+Nivel (columna de formato),AFIRMACION_AREA
+Nivel (columna de formato),HIPOTESIS
