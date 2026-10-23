@@ -1,0 +1,83 @@
+---
+title: PV-PRE-2 · Mapa de preocupaciones y tensiones (iteración 1, propuesta)
+config:
+  layout: elk
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart LR
+  %% Lenguaje (propuesto, BAC-13):
+  %%   hexágono = Area | bandera = Preocupacion | rectángulo = Sistema | rombo = Tension
+  %%   línea fina gris = el área afirma la preocupación
+  %%   flecha rotulada "ubica" = el sistema donde el área ubica el problema
+  %%   línea gruesa naranja = la preocupación participa en la tensión
+  %%   borde punteado = afirmación o ubicación POR LEVANTAR
+  %% No se usan flecha punteada ni flecha roja gruesa: están reservadas a Intercambio (PV-INT-2).
+  %% Regla de la vista: solo Preocupaciones con afirmación distinta de POR LEVANTAR, más un marcador por Area sin ninguna.
+  %% El orden de los sistemas no representa Intercambios (aún no levantados).
+
+  subgraph AREAS["Áreas (afirman)"]
+    A1{{"AREA-01<br/>Operaciones"}}
+    A2{{"AREA-02<br/>Producto"}}
+    A3{{"AREA-03<br/>Finanzas"}}
+    A4{{"AREA-04<br/>Comercial"}}
+    A5{{"AREA-05<br/>Atención al cliente"}}
+    A6{{"AREA-06<br/>Gerencia"}}
+  end
+
+  subgraph PREOC["Preocupaciones (nivel AFIRMACION_AREA)"]
+    P02>"PRE-02 · TI<br/>«el problema es el conector de terceros, que traduce mal y tarde»"]
+    P04>"PRE-04 · TI<br/>«la app de conductor no fuerza actualización de estado en tiempo real»"]
+    P06>"PRE-06 · TI<br/>«liquidación no tiene cómo validar entregas de forma independiente»"]
+    P07>"PRE-07 · NEGOCIO<br/>«el contrato se firma en 10 semanas y no puede esperar un rediseño completo»<br/>ubica: POR LEVANTAR"]
+    P09>"PRE-09 y PRE-10<br/>POR LEVANTAR"]
+    P11>"PRE-11 · NEGOCIO<br/>«dónde está el problema realmente y si es o no razonable firmar con el cliente en 10 semanas»<br/>ubica: POR LEVANTAR"]
+  end
+
+  subgraph SISTEMAS["Sistemas del caso (dónde se ubica el problema)"]
+    S1["SIS-01<br/>Plataforma de integración de pedidos"]
+    S2["SIS-02<br/>Sistema de asignación y ruteo"]
+    S3["SIS-03<br/>App de conductor"]
+    S4["SIS-04<br/>Conector de terceros"]
+    S5["SIS-05<br/>Sistema de liquidación y pagos"]
+  end
+
+  T1{"TEN-01 · ubicación distinta<br/>conector vs app vs liquidación"}
+  T2{"TEN-02 · ubicación del retraso<br/>del estado: conector vs app"}
+  T3{"TEN-03 · plazo vs decisión<br/>de firmar"}
+
+  A1 --- P02
+  A2 --- P04
+  A3 --- P06
+  A4 --- P07
+  A5 --- P09
+  A6 --- P11
+
+  P02 -->|ubica| S4
+  P04 -->|ubica| S3
+  P06 -->|ubica| S5
+
+  P02 --- T1
+  P04 --- T1
+  P06 --- T1
+  P02 --- T2
+  P04 --- T2
+  P07 --- T3
+  P11 --- T3
+
+  classDef area fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef preocupacion fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef sistema fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef tension fill:#ffffff,stroke:#b45309,stroke-width:2.5px,color:#111827
+  classDef porLevantar fill:#ffffff,stroke:#6b7280,stroke-width:1.5px,stroke-dasharray:5 5,color:#111827
+
+  class A1,A2,A3,A4,A5,A6 area
+  class P02,P04,P06 preocupacion
+  class S1,S2,S3,S4,S5 sistema
+  class T1,T2,T3 tension
+  class P07,P09,P11 porLevantar
+
+  linkStyle 0,1,2,3,4,5 stroke:#9ca3af,stroke-width:1px
+  linkStyle 6,7,8 stroke:#111827,stroke-width:2px
+  linkStyle 9,10,11,12,13,14,15 stroke:#b45309,stroke-width:3px
