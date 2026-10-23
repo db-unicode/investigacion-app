@@ -16,10 +16,14 @@ ORDEN = [
     "RutaExpress_marketplaces", "RutaExpress_aliados", "Intercambio_transporta",
     "Intercambio_estadosReportados", "Intercambio_modalidades", "Intercambio_problemas",
     "Intercambio_fuentes", "Problema_reportadoPor", "Problema_afectados", "Problema_fuentes",
-    "EstadoPedido_siguientes", "Catalogos", "POR_LEVANTAR",
+    "EstadoPedido_siguientes", "RutaExpress_problemas", "Preocupacion", "Tension", "Catalogos", "POR_LEVANTAR",
 ]
 # Columnas que toman su lista de valores de la hoja Catalogos.
-ENUMS = {"mecanismo": "Mecanismo", "oportunidad": "Oportunidad", "tipo": "TipoFuente", "Nivel": "Nivel"}
+ENUMS = {
+    "mecanismo": ["Mecanismo"], "oportunidad": ["Oportunidad"],
+    "tipo": ["TipoPreocupacion", "TipoFuente"], "Nivel": ["Nivel (columna de formato)"],
+    "nivel": ["NivelInformacion"], "origen": ["OrigenTension"],
+}
 
 HEADER_FILL = PatternFill("solid", fgColor="1F3864")
 HEADER_FONT = Font(bold=True, color="FFFFFF")
@@ -59,8 +63,8 @@ def main(carpeta, salida):
                 c.alignment = Alignment(wrap_text=True, vertical="top")
         ws.freeze_panes = "A2"
         for celda in ws[1]:
-            enum = ENUMS.get(celda.value)
-            if enum and enum in rangos_enum and nombre != "Catalogos":
+            enum = next((e for e in ENUMS.get(celda.value, []) if e in rangos_enum), None)
+            if enum and nombre != "Catalogos":
                 dv = DataValidation(type="list", formula1=rangos_enum[enum], allow_blank=True)
                 ws.add_data_validation(dv)
                 dv.add(f"{celda.column_letter}2:{celda.column_letter}500")
