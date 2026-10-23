@@ -8,6 +8,7 @@ INT-06,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
 INT-07,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
 INT-08,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
 INT-09,POR LEVANTAR,POR LEVANTAR,POR LEVANTAR
-INT-10,GRP-01,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO
-INT-10,GRP-02,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO
-INT-10,GRP-03,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.»",HECHO
+INT-10,GRP-01,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.» · párr. 4: «La plataforma de integración captura los datos iniciales del pedido.»",HIPOTESIS
+INT-11,GRP-01,"FUE-01 §Caso de estudio, párr. 2: «Si el pedido va por transportadora aliada, se envía a través de un conector de terceros que traduce el formato interno al que cada aliado requiere»",HECHO
+INT-12,GRP-02,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.» · párr. 4: «El sistema de ruteo genera asignaciones y estados de tránsito.»",HIPOTESIS
+INT-13,GRP-03,"FUE-01 §Caso de estudio, párr. 4: «El sistema de liquidación consolida todo lo anterior para calcular pagos y cobros y es, de los cinco sistemas, el que más sufre cuando hay inconsistencia aguas arriba.» · párr. 4: «La app de conductor produce evidencia de entrega.»",HIPOTESIS

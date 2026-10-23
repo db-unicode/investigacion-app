@@ -2,7 +2,7 @@ Hoja,Campo,Tipo o destino,Card.,Cómo se llena
 (todas),POR LEVANTAR,texto,—,"Toda celda sin dato en ninguna fuente dice `POR LEVANTAR` (en enumerados, `POR_LEVANTAR`) y tiene su pregunta en la hoja `POR_LEVANTAR`. Significa que no se sabe. Nunca se infiere (R6)."
 (todas),NO APLICA,texto,—,"Ausencia confirmada por una fuente: `NO APLICA (Fuente-id)`, por ejemplo `NO APLICA (FUE-01)`. En esta entrega no se usó."
 (todas),Fuente,"`FUE-nn §sección, párr. n: «cita literal»`",1 o más,"Columna de trazabilidad del formato (no es atributo del metamodelo; aprobada por el Arquitecto Líder). Varias citas se separan con ` · `; varias fuentes con `;`. Va en toda hoja de concepto y puente, excepto `Fuente`, `Intercambio_fuentes` y `Problema_fuentes`."
-(todas las que tienen Fuente),Nivel,enum Nivel (formato),1,"HECHO: lo dice el enunciado o un documento como hecho. AFIRMACION_AREA: lo dice un área; si viene del enunciado, la Fuente es de tipo ENUNCIADO_CASO. HIPOTESIS: afirmación sin evidencia de sistema. Un Problema cuyas fuentes son solo ENUNCIADO_CASO o la afirmación de un área no es causa confirmada (R5). En filas sin dato: `POR LEVANTAR`."
+(todas las que tienen Fuente),Nivel,enum Nivel (formato),1,"HECHO: lo dice el enunciado o un documento como hecho. AFIRMACION_AREA: lo dice un área; si viene del enunciado, la Fuente es de tipo ENUNCIADO_CASO. HIPOTESIS: afirmación sin evidencia de sistema. Un Problema cuyas fuentes son solo ENUNCIADO_CASO o la afirmación de un área no es causa confirmada (R5). En filas sin dato: `POR LEVANTAR` (admitido por el Arquitecto Líder). En intercambios con extremo derivado de una secuencia: `HIPOTESIS`."
 Sistema,id,EString,1,"Formato `SIS-nn`. Único entre Sistema, ParticipanteExterno y Area. Es la llave."
 Sistema,nombre,EString,1,Nombre usado en la empresa.
 Sistema,funcion,EString,1,"Qué hace el sistema en el flujo del pedido, según la fuente."
@@ -16,13 +16,13 @@ Area,nombre,EString,1,Nombre del equipo interno.
 Area,lider,EString,1,Persona o cargo líder; es el interlocutor para el levantamiento.
 Intercambio,id,EString,1,Formato `INT-nn`. Es la llave.
 Intercambio,nombre,EString,1,Nombre corto.
-Intercambio,mecanismo,enum Mecanismo,1,Cómo viaja la información. Valor de `Catalogos`.
+Intercambio,mecanismo,enum Mecanismo,1,Cómo viaja la información. Valor de `Catalogos`. `CONECTOR_TERCEROS` se usa solo en el tramo entre el conector (Sistema) y el aliado (R7).
 Intercambio,oportunidad,enum Oportunidad,1,Si llega en tiempo real o diferida. Valor de `Catalogos`. Con CORREO_ELECTRONICO o CONSULTA_MANUAL no puede ser TIEMPO_REAL (R3).
 Intercambio,latenciaObservada,EString,1,"Retraso observado, en texto, citando su fuente. No se estima."
 Intercambio,transformaFormato,EBoolean,1,Si el intercambio traduce el formato entre origen y destino. Valor de `Catalogos`.
 Intercambio,volumenDiario,EInt,1,"Cantidad de mensajes o pedidos al día, solo si una fuente la da."
-Intercambio,origen,llave de Extremo (id),1,Extremo del que sale el flujo. Se registra solo si el enunciado lo nombra como emisor de ese flujo. Distinto de `destino` (R1).
-Intercambio,destino,llave de Extremo (id),1,Extremo al que llega el flujo. Se registra solo si el enunciado lo nombra como receptor de ese flujo.
+Intercambio,origen,llave de Extremo (id),1,"Extremo del que sale el flujo. Un solo origen por intercambio (R8): si un sistema consolida varios orígenes, un intercambio por cada origen. Se registra si el enunciado lo nombra como emisor; si el mismo párrafo describe una secuencia que lo fija, se registra con Nivel `HIPOTESIS`, citando la secuencia y con pregunta de validación. Si no, `POR LEVANTAR`. Distinto de `destino` (R1)."
+Intercambio,destino,llave de Extremo (id),1,Extremo al que llega el flujo. Mismas reglas que `origen`. Un flujo que pasa por el conector se registra como dos intercambios: entrada al conector y salida del conector (R7).
 GrupoInformacion,id,EString,1,Formato `GRP-nn`. Es la llave.
 GrupoInformacion,nombre,EString,1,Nombre del grupo de datos.
 GrupoInformacion,descripcion,EString,1,Descripción del grupo de datos.
@@ -39,6 +39,7 @@ Fuente,tipo,enum TipoFuente,1,Valor de `Catalogos`.
 Fuente,fecha,EDate,1,"Fecha de la fuente, en formato AAAA-MM-DD."
 RutaExpress_marketplaces,marketplaces,llave de ParticipanteExterno.id,*,Un registro por cada ParticipanteExterno que es marketplace.
 RutaExpress_aliados,aliados,llave de ParticipanteExterno.id,*,Un registro por cada ParticipanteExterno que es transportadora aliada.
+RutaExpress_problemas,problemas,llave de Problema.id,*,"Un registro por cada Problema, tenga o no intercambio. Garantiza que todo Problema es alcanzable desde la raíz (metamodelo v1.1)."
 Intercambio_transporta,"Intercambio, transporta",llaves de Intercambio.id y GrupoInformacion.id,* (mínimo 1 por intercambio),Un registro por cada grupo que viaja en el intercambio (R2). Si no se sabe: `POR LEVANTAR`.
 Intercambio_estadosReportados,"Intercambio, estadosReportados",llaves de Intercambio.id y EstadoPedido.nombre,*,Un registro por cada estado que el intercambio comunica.
 Intercambio_modalidades,"Intercambio, modalidades",llaves de Intercambio.id y ModalidadEntrega.nombre,*,Un registro por cada modalidad en la que ocurre. Ver R4.

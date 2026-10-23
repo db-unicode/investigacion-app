@@ -1,5 +1,5 @@
 Intercambio,problemas,Fuente,Nivel
 INT-05,PRB-01,"FUE-01 §Caso de estudio, párr. 3: «un conductor puede marcar una entrega como completada en la app sin que el marketplace reciba la confirmación a tiempo por una falla en la integración»",HIPOTESIS
 INT-07,PRB-02,"FUE-01 §Caso de estudio, párr. 3: «una transportadora aliada puede reportar el estado por correo en lugar de hacerlo por el conector, generando que el pedido quede “en tránsito” en el sistema interno mientras ya fue entregado»",HIPOTESIS
-INT-03,PRB-03,"FUE-01 §Caso de estudio, párr. 4: «El conector de terceros traduce y a veces pierde información en el camino.»",HIPOTESIS
-INT-03,PRB-04,"FUE-01 §Caso de estudio, párr. 5: «Operaciones dice que el problema es el conector de terceros, que traduce mal y tarde»",AFIRMACION_AREA
+INT-11,PRB-03,"FUE-01 §Caso de estudio, párr. 4: «El conector de terceros traduce y a veces pierde información en el camino.»",HIPOTESIS
+INT-11,PRB-04,"FUE-01 §Caso de estudio, párr. 5: «Operaciones dice que el problema es el conector de terceros, que traduce mal y tarde»",AFIRMACION_AREA

@@ -1,0 +1,15 @@
+enumeracion,valor,descripcion
+NivelInformacion,HECHO,Lo dice el enunciado o un documento como hecho. En Preocupacion exige Fuente REGISTRO_SISTEMA o DOCUMENTO.
+NivelInformacion,AFIRMACION_AREA,Lo dice un equipo.
+NivelInformacion,HIPOTESIS,Afirmación sin evidencia de sistema.
+TipoPreocupacion,NEGOCIO,"Se refiere al proceso, al contrato, al SLA, a un control financiero o a un efecto en clientes."
+TipoPreocupacion,TI,Se refiere al comportamiento o la capacidad de un sistema o de un intercambio. La clasificación inicial es del analista y la valida el área.
+OrigenTension,DECLARADA_EN_FUENTE,La fuente afirma el desacuerdo o la disputa.
+OrigenTension,DERIVADA_POR_ANALISTA,Lectura del analista sobre posiciones o hechos de la fuente. Debe validarse con las áreas.
+TipoFuente,ENUNCIADO_CASO,Vigente (metamodelo v1.1).
+TipoFuente,DOCUMENTO,Vigente (metamodelo v1.1).
+TipoFuente,ENTREVISTA,Vigente (metamodelo v1.1).
+TipoFuente,REGISTRO_SISTEMA,Vigente (metamodelo v1.1).
+ModalidadEntrega (valores de modalidadesAfectadas),Flota propia,"Valores admitidos separados por punto y coma, o POR LEVANTAR."
+ModalidadEntrega (valores de modalidadesAfectadas),Afiliado,"Valores admitidos separados por punto y coma, o POR LEVANTAR."
+ModalidadEntrega (valores de modalidadesAfectadas),Transportadora aliada,"Valores admitidos separados por punto y coma, o POR LEVANTAR."

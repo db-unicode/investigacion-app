@@ -1,0 +1,7 @@
+problemas,Fuente,Nivel
+PRB-01,"FUE-01 §Caso de estudio, párr. 3: «un conductor puede marcar una entrega como completada en la app sin que el marketplace reciba la confirmación a tiempo por una falla en la integración»",HIPOTESIS
+PRB-02,"FUE-01 §Caso de estudio, párr. 3: «una transportadora aliada puede reportar el estado por correo en lugar de hacerlo por el conector, generando que el pedido quede “en tránsito” en el sistema interno mientras ya fue entregado»",HIPOTESIS
+PRB-03,"FUE-01 §Caso de estudio, párr. 4: «El conector de terceros traduce y a veces pierde información en el camino.»",HIPOTESIS
+PRB-04,"FUE-01 §Caso de estudio, párr. 5: «Operaciones dice que el problema es el conector de terceros, que traduce mal y tarde»",AFIRMACION_AREA
+PRB-05,"FUE-01 §Caso de estudio, párr. 5: «Producto insiste en que el problema es que la app de conductor no fuerza actualización de estado en tiempo real»",AFIRMACION_AREA
+PRB-06,"FUE-01 §Caso de estudio, párr. 5: «Finanzas afirma que el verdadero problema es que liquidación no tiene cómo validar entregas de forma independiente»",AFIRMACION_AREA

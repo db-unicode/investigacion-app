@@ -112,3 +112,13 @@ Preguntas nuevas de esta versión:
 - **B8. Brecha de metamodelo: `Nivel` y R5 se solapan en Problema.** R5 ya deriva que un Problema con fuentes solo ENUNCIADO_CASO o afirmación de área es hipótesis. `Nivel=HECHO` no tiene sentido para un Problema sin REGISTRO_SISTEMA o DOCUMENTO. *Ajuste propuesto:* para Problema, `Nivel` toma HIPOTESIS o AFIRMACION_AREA hasta que exista evidencia de sistema o documento. Lo apliqué así en la entrega 3d; tú decides.
 
 Este borrador es para tu revisión. No lo envío a las áreas.
+
+## Ajuste iteración 2
+
+Metamodelo v1.1 (conocimientos 05 y 06): nueva relación `RutaExpress -> problemas (*)` y restricciones R7 y R8.
+
+- **Hoja nueva `RutaExpress_problemas`**, con encabezados `problemas,Fuente,Nivel` (archivo `csv/RutaExpress_problemas.csv`). Registra todos los Problema, tengan o no intercambio, para que sean alcanzables desde la raíz. El libro pasa de 23 a 24 hojas (12 puente).
+- Los encabezados de las otras 23 hojas no cambian.
+- R7 y R8 no cambian columnas: el conector (SIS-03) se registra como Sistema y un intercambio tiene un solo origen. Se reflejan en la hoja `00_GUIA` (descripción de `mecanismo`, `origen` y `destino`).
+- `Nivel` admite `POR LEVANTAR` (P11 cerrada); `Nivel=HIPOTESIS` también se usa en un intercambio cuando su extremo se deriva de una secuencia del enunciado. Prefijos `GRP-nn` y `PRB-nn` aprobados (P12 cerrada).
+- Control de conformidad: se agrega la verificación de alcanzabilidad desde la raíz. B9 y B11 quedan cerradas con R7 y R8; B10 queda aceptada para la v2 del metamodelo; B12 se mantiene.
