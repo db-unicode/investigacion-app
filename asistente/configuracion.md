@@ -73,6 +73,7 @@ Cada entrega incluye cuatro partes:
 - 03 Enunciado Workshop 2 Parte II – lo que se espera del asistente.
 - 04 Villalobos, Modelos y Metamodelos v1.2 – notación y método (BAC-09 a BAC-16).
 - 05 Toolbox y metamodelo del dominio de Integración – decisiones del equipo y metamodelo vigente.
+- 06 Diagrama del metamodelo de Integración (BAC-09, Mermaid) – estructura de clases, herencia y roles.
 ```
 
 ## Archivos de conocimiento cargados al Project
@@ -83,3 +84,4 @@ Cada entrega incluye cuatro partes:
 | 03 | `03_Enunciado_Workshop2_ParteII.pdf` | Alcance del asistente. |
 | 04 | `04_Villalobos_Modelos_y_Metamodelos_v1.2.pdf` | Método de metamodelos, formatos (BAC-14) y vistas (BAC-16). |
 | 05 | `05_Toolbox_y_Metamodelo_Integracion.md` | Toolbox (repositorio, editores, cuerpos de conocimiento) y metamodelo de Integración. |
+| 06 | `06_Metamodelo_Integracion_BAC-09.mmd` | Diagrama de clases del metamodelo (agregado en la iteración 1: el asistente no podía confirmar la herencia de `Extremo`). |
