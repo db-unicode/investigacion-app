@@ -59,7 +59,7 @@ Además, el SLA de trazabilidad en tiempo real depende de que los estados viajen
 
 | Clase | Atributo / Relación | Descripción |
 |---|---|---|
-| RutaExpress | sistemas, marketplaces, aliados, areas, intercambios, gruposInformacion, estados, modalidades, fuentes (*) | Agrupaciones desde la raíz. Los roles `marketplaces` y `aliados` distinguen a los participantes externos sin usar un atributo de tipo (guía P2). |
+| RutaExpress | sistemas, marketplaces, aliados, areas, intercambios, gruposInformacion, estados, modalidades, fuentes, problemas (*) | Agrupaciones desde la raíz. Los roles `marketplaces` y `aliados` distinguen a los participantes externos sin usar un atributo de tipo (guía P2). |
 | Extremo | id: EString; nombre: EString | Identificador único y nombre usado en la empresa. |
 | Sistema | funcion: EString | Qué hace el sistema en el flujo del pedido. |
 | Sistema | tecnologia: EString | Plataforma o tecnología, solo si una fuente la menciona. |
@@ -103,6 +103,12 @@ Además, el SLA de trazabilidad en tiempo real depende de que los estados viajen
 | R4 | Si un extremo del Intercambio pertenece a `aliados`, sus modalidades incluyen "Transportadora aliada". |
 | R5 | Un Problema cuyas fuentes son solo ENUNCIADO_CASO o la afirmación de un área es una **hipótesis**. Solo se confirma con REGISTRO_SISTEMA o con DOCUMENTO. |
 | R6 | Un atributo sin dato en una fuente se registra como `POR LEVANTAR`. Nunca se infiere. |
+| R7 | (v1.1) El Conector de terceros es un Sistema (Extremo), no solo un mecanismo. Un flujo que pasa por él se registra como dos Intercambios: entrada al conector y salida del conector. `CONECTOR_TERCEROS` se usa solo en el tramo entre el conector y el aliado. |
+| R8 | (v1.1) Un Intercambio tiene un solo origen. Si un sistema consolida información de varios orígenes, se registra un Intercambio por cada origen. |
+
+**Cambios v1.0 → v1.1** (iteración 2, decididos por el arquitecto líder):
+- Se agrega `RutaExpress → problemas (*)`. Antes, un Problema que no estaba asociado a ningún Intercambio quedaba inalcanzable desde la raíz.
+- Se agregan las restricciones R7 y R8.
 
 ### 2.5 Puntos de vista y lenguajes (BAC-16, BAC-13, BAC-14)
 

@@ -1,5 +1,5 @@
 ---
-title: BAC-09 · Metamodelo del dominio de Integración (AS-IS) · RutaExpress
+title: BAC-09 · Metamodelo del dominio de Integración (AS-IS) v1.1 · RutaExpress
 config:
   layout: elk
   elk:
@@ -87,6 +87,7 @@ classDiagram
   RutaExpress --> "estados *" EstadoPedido
   RutaExpress --> "modalidades *" ModalidadEntrega
   RutaExpress --> "fuentes *" Fuente
+  RutaExpress --> "problemas *" Problema
 
   Extremo <|-- Sistema
   Extremo <|-- ParticipanteExterno
